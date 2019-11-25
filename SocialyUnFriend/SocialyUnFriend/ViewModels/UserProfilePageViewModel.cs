@@ -10,6 +10,9 @@ using Prism.Navigation;
 using SocialyUnFriend.Views;
 using Microsoft.AppCenter.Crashes;
 using System.Collections.Generic;
+using Xamarin.Essentials.Interfaces;
+using Prism.Services;
+using Xamarin.Essentials;
 
 namespace SocialyUnFriend.ViewModels
 {
@@ -19,15 +22,40 @@ namespace SocialyUnFriend.ViewModels
         private readonly ILinkedInService _linkedInService;
         private readonly IFourSquareService _fourSquareService;
         private readonly INavigationService _navigationService;
+        private readonly IConnectivity _connectivity;
+        private readonly IPageDialogService _pageDialogService;
 
         public UserProfilePageViewModel(ILinkedInService linkedInService, IFourSquareService fourSquareService,
-                                        INavigationService navigationService)
+                                        INavigationService navigationService, IConnectivity connectivity,IPageDialogService pageDialogService)
         {
             _linkedInService = linkedInService;
             _fourSquareService = fourSquareService;
             _navigationService = navigationService;
+            _connectivity = connectivity;
+            _pageDialogService = pageDialogService;
+
 
             NavigateCommand = new DelegateCommand<string>(NavigateCommandExecuted);
+
+            _connectivity.ConnectivityChanged += _connectivity_ConnectivityChanged;
+        }
+
+        ~UserProfilePageViewModel()
+        {
+            _connectivity.ConnectivityChanged -= _connectivity_ConnectivityChanged;
+        }
+
+        private async void _connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            if (_connectivity.NetworkAccess != NetworkAccess.Internet)
+                await _pageDialogService.DisplayAlertAsync("Connection Error", "Internet is not available.", "Ok");
+            else
+            {
+                if (IsPostBtnVisible)
+                    LoadLinkedInUserProfile();
+                else
+                    LoadFourSquareUserProfile();
+            }
         }
 
         public DelegateCommand<string> NavigateCommand { get; }
@@ -119,6 +147,18 @@ namespace SocialyUnFriend.ViewModels
         {
             try
             {
+               
+
+                if (_connectivity.NetworkAccess != NetworkAccess.Internet)
+                {
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        await _pageDialogService.DisplayAlertAsync("Network Error!", "Please turn on your internet", "Ok");
+                    });
+
+                    return;
+                }
+
                 IsRunning = true;
 
                 var apiResponse = await _linkedInService.GetUserProfile
@@ -154,6 +194,19 @@ namespace SocialyUnFriend.ViewModels
         {
             try
             {
+
+
+                if (_connectivity.NetworkAccess != NetworkAccess.Internet)
+                {
+                    Device.BeginInvokeOnMainThread(async ()  =>
+                    {
+                        await _pageDialogService.DisplayAlertAsync("Network Error!", "Please turn on your internet", "Ok");
+                    });
+                   
+
+                    return;
+                }
+
                 IsRunning = true;
 
                 var apiResponse = await _fourSquareService.GetUserProfile
@@ -177,6 +230,7 @@ namespace SocialyUnFriend.ViewModels
                     await Application.Current.SavePropertiesAsync();
                 }
 
+                
             }
             catch (Exception exception)
             {

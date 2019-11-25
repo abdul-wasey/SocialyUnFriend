@@ -14,7 +14,7 @@
         <Grid>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="4*" />
                     <RowDefinition Height="3*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
@@ -25,7 +25,7 @@
                      BackgroundColor="#1C76D2" />
 
                 <ffimageloading:CachedImage 
-                   Source="{Binding Image}"
+                   Source="{Binding Image, Mode=TwoWay}"
                    Grid.Row="0"
                    HorizontalOptions="Center"
                    VerticalOptions="End"
@@ -33,6 +33,7 @@
                    WidthRequest="200" 
                    HeightRequest="200"
                    LoadingPlaceholder="loading.png">
+                    
                 </ffimageloading:CachedImage>
 
                 <Frame Grid.Row="1" 

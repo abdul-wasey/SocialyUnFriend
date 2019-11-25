@@ -82,7 +82,7 @@ namespace SocialyUnFriend.ViewModels
                             await Application.Current.SavePropertiesAsync();
 
 
-                            await _navigationService.NavigateAsync("/UserProfilePage");
+                            await _navigationService.NavigateAsync("/NavigationPage/UserProfilePage");
                         }
                         else
                         {
