@@ -35,7 +35,9 @@ namespace SocialyUnFriend.ViewModels
 
         public async void NavigateCommandExecuted(string pageName)
         {
+            
             await _navigationService.NavigateAsync(pageName);
+           
         }
 
 

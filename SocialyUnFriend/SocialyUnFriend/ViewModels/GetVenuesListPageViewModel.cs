@@ -17,7 +17,7 @@ using Microsoft.AppCenter.Crashes;
 
 namespace SocialyUnFriend.ViewModels
 {
-    public class GetVenuesListPageViewModel : BindableBase
+    public class GetVenuesListPageViewModel : BindableBase, INavigatedAware
     {
         private readonly IFourSquareService _fourSquareService;
         private readonly IGeoLocatorService _geoLocatorService;
@@ -37,11 +37,12 @@ namespace SocialyUnFriend.ViewModels
             _connectivity = connectivity;
             _venuesRepository = venuesRepository;
 
+
+
             CheckInCommand = new DelegateCommand<string>(CheckInCommandExecuted);
 
             _connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
-
-            GetNearestVenues();
+           
         }
 
 
@@ -149,6 +150,11 @@ namespace SocialyUnFriend.ViewModels
 
                     Crashes.TrackError(ex, properties);
                 }
+
+                finally
+                {
+                    IsRunning = false;
+                }
             }
 
             try
@@ -207,6 +213,16 @@ namespace SocialyUnFriend.ViewModels
             }
         }
 
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
+           
+        }
+
+        public void OnNavigatedTo(INavigationParameters parameters)
+        {
+            GetNearestVenues();
+        }
+
 
         private async void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
@@ -216,5 +232,6 @@ namespace SocialyUnFriend.ViewModels
                 GetNearestVenues();
         }
 
+     
     }
 }

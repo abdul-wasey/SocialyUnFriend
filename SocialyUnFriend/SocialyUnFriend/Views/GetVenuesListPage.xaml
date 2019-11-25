@@ -48,7 +48,8 @@
                        TextColor="White"    
                        Text="{Binding City,Mode=TwoWay}"
                        LineBreakMode="TailTruncation"
-                       FontAttributes="Italic"
+                       FontAttributes="None"
+                       HorizontalOptions="Start"    
                        VerticalOptions="End" 
                            />
                     

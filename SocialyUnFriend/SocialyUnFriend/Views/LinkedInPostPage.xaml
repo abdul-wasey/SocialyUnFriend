@@ -8,7 +8,7 @@
              xmlns:customRenderer="clr-namespace:SocialyUnFriend.CustomRenderers">
 
 
-    <Grid Padding="25">
+    <Grid Padding="15">
 
         <Frame BackgroundColor="White"
                Padding="0"
@@ -34,6 +34,8 @@
                         VerticalOptions="End"
                         Margin="15"
                         />
+
+        <ActivityIndicator IsRunning="{Binding IsRunning}" Color="DodgerBlue"/>
     </Grid>
 
 </ContentPage>
