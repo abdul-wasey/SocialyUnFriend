@@ -43,6 +43,7 @@ namespace SocialyUnFriend.ViewModels
 
                 return;
             }
+
             string url = "";
 
             IsRunning = true;
