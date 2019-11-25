@@ -29,4 +29,16 @@
   <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
     <item name="colorAccent">#0078D7</item>
   </style>
+
+  <style parent="Theme.AppCompat.NoActionBar" name="Theme.Splash">
+
+    <item name="windowNoTitle">true</item>
+
+    <item name="colorPrimary">#0078D7</item>
+
+    <item name="colorPrimaryDark">#5D4037</item>
+
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+
+  </style>
 </resources>

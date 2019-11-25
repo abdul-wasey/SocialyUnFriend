@@ -33,13 +33,9 @@ namespace SocialyUnFriend.ViewModels
         public DelegateCommand<string> NavigateCommand { get; }
 
 
-        public void NavigateCommandExecuted(string pageName)
+        public async void NavigateCommandExecuted(string pageName)
         {
-
-            throw new ArgumentNullException();
-
-            //await _navigationService.NavigateAsync(pageName);
-
+            await _navigationService.NavigateAsync(pageName);
         }
 
 
