@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="SocialyUnFriend.Views.GetVenuesListPage"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             Title="Venues List"
+             x:Name="page">
+
+    <Grid BackgroundColor="#1D76A2">
+        
+        <CollectionView ItemsSource="{Binding Venues,Mode=TwoWay}"
+                    SelectionMode="None">
+        
+        
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical"
+                        Span="1" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Grid Padding="10" RowSpacing="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="8*" />
+                    </Grid.ColumnDefinitions>
+                    <ffimageloading:CachedImage
+                       Grid.RowSpan="3"
+                       Source="{Binding Image,Mode=TwoWay}"
+                       Aspect="AspectFill"
+                       DownsampleToViewSize="True"
+                       ErrorPlaceholder="loading.png" />
+                    
+                    <Label Grid.Column="1"
+                       Text="{Binding name,Mode=TwoWay}"
+                       TextColor="White"    
+                       FontAttributes="Bold"
+                       LineBreakMode="TailTruncation"
+                        />
+                    <Label Grid.Row="1"
+                       Grid.Column="1"
+                       TextColor="White"    
+                       Text="{Binding City,Mode=TwoWay}"
+                       LineBreakMode="TailTruncation"
+                       FontAttributes="Italic"
+                       VerticalOptions="End" 
+                           />
+                    
+                    <Button Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalOptions="End"
+                            VerticalOptions="End"
+                            Text="Check In"
+                            Command="{Binding Source={x:Reference page}, Path=BindingContext.CheckInCommand}"
+                            CommandParameter="{Binding id, Mode=TwoWay}"
+                            />
+
+                    </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+
+        <ActivityIndicator IsRunning="{Binding IsRunning}" />
+    </Grid>
+
+</ContentPage>

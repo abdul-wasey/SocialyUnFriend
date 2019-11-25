@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             mc:Ignorable="d"
+             x:Class="SocialyUnFriend.Views.LoginPage"
+             NavigationPage.HasNavigationBar="False"
+             >
+   
+        <Grid>
+
+            <Grid Padding="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <Image Margin="0,30,0,0"
+                  Grid.Row="0"
+                  Source="logo.jpg" 
+                  Aspect="AspectFit"
+                       
+               />
+                <StackLayout Grid.Row="1" 
+                         VerticalOptions="CenterAndExpand" 
+                         HorizontalOptions="FillAndExpand" 
+                         Spacing="0">
+
+                    <Entry Placeholder="Enter Email..." />
+                    <Entry Placeholder="Enter Password..." />
+
+                    <Label Text="OR" 
+                       HorizontalOptions="CenterAndExpand" 
+                       FontAttributes="Bold" 
+                       TextColor="#80FFFFFF" 
+                       TextDecorations="Underline"
+                       FontSize="20"
+                       Margin="10"
+                       />
+                    <Button Text="Login with Linked In"
+                        BackgroundColor="DodgerBlue"
+                        TextColor="White"
+                        Margin="5"
+                        Command="{Binding NavigationCommand}"
+                        CommandParameter="linkedin"    />
+
+                    <Button Text="Login with FourSquare"
+                        BackgroundColor="#D56048"
+                        TextColor="White"
+                        Margin="5"
+                        Command="{Binding NavigationCommand}" 
+                        CommandParameter="foursquare" />
+
+                </StackLayout>
+
+
+            </Grid>
+
+            <ActivityIndicator  
+                               IsRunning="{Binding IsRunning}"/>
+
+        </Grid>
+    
+</ContentPage>

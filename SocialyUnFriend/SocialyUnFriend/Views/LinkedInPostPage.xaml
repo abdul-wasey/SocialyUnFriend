@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="SocialyUnFriend.Views.LinkedInPostPage"
+             Title="Create a Post"
+             xmlns:customRenderer="clr-namespace:SocialyUnFriend.CustomRenderers">
+
+
+    <Grid Padding="25">
+
+        <Frame BackgroundColor="White"
+               Padding="0"
+               HasShadow="True"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="FillAndExpand">
+
+            <StackLayout Spacing="0">
+                <BoxView Color="#0073B1" HorizontalOptions="FillAndExpand" HeightRequest="35" />
+                <customRenderer:ExtendedEditorControl HeightRequest="150"
+                        Placeholder="What do you want to talk about?"
+                        IsExpandable="True"
+                        HasRoundedCorner="False"                              
+                        PlaceholderColor="LightGray"
+                        TextColor="Black" 
+                        Text="{Binding Content}"/>
+
+            </StackLayout>
+        </Frame>
+                      <Button        
+                        Text="Post"
+                        Command="{Binding PostCommand}"
+                        VerticalOptions="End"
+                        Margin="15"
+                        />
+    </Grid>
+
+</ContentPage>

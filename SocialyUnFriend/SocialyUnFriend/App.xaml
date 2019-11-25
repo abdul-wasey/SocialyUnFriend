@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms.Extended"
+             x:Class="SocialyUnFriend.App">
+
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <!--  global style for Navigation Bar  -->
+
+
+            <Style TargetType="NavigationPage">
+
+                <Setter Property="BarBackgroundColor"  Value="#1D76A2"/>
+                <Setter Property="BarTextColor"  Value="White" />
+                <Setter Property="BackgroundColor"  Value="#1D76A2"/>
+
+            </Style>
+            
+            <Style TargetType="Button">
+
+                <Setter Property="BackgroundColor" Value="#8CE4D6" />
+                <Setter Property="TextColor" Value="#343434 " />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Padding" Value="0" />
+                
+
+            </Style>
+
+
+            <Style TargetType="Entry">
+                
+                <Setter Property="PlaceholderColor" Value="#FFFFFF" />
+                <Setter Property="BackgroundColor" Value="#2EDEDEDE" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+            </Style>
+           
+
+            <Style TargetType="ActivityIndicator">
+
+                <Setter Property="Color" Value="White" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="WidthRequest" Value="50" />
+
+            </Style>
+
+
+        </ResourceDictionary>
+
+    </Application.Resources>
+
+</prism:PrismApplication>

@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             NavigationPage.HasNavigationBar="False"
+             mc:Ignorable="d"
+             x:Class="SocialyUnFriend.Views.UserProfilePage"
+             >
+    <ContentPage.Content>
+        <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <BoxView Grid.Row="0"
+                     HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#1C76D2" />
+
+                <ffimageloading:CachedImage 
+                   Source="{Binding Image}"
+                   Grid.Row="0"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   Aspect="AspectFit" 
+                   WidthRequest="200" 
+                   HeightRequest="200"
+                   LoadingPlaceholder="loading.png">
+                </ffimageloading:CachedImage>
+
+                <Frame Grid.Row="1" 
+                       Padding="0" 
+                   CornerRadius="10"
+                   Margin="15"    
+                   HasShadow="True"
+                   BackgroundColor="#CA5100">
+
+
+                    <Grid Margin="0,40,0,0" Padding="10">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5*" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+
+                      <Label Text="Profile Id" 
+                       Grid.Row="0" 
+                       Grid.Column="0"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       />
+
+                        <BoxView BackgroundColor="Black"
+                         Grid.Row="0" 
+                         Grid.Column="0"
+                          HeightRequest="15" 
+                         WidthRequest="2" 
+                         HorizontalOptions="End"
+                         VerticalOptions="FillAndExpand"/>
+
+                        <Label Text="{Binding ProfileId}"
+                       Grid.Row="0" 
+                       Grid.Column="1"
+                       TextColor="White"
+                        HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       />
+
+                        <Label Text="First Name" 
+                       Grid.Row="1" 
+                       Grid.Column="0"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       />
+
+                        <BoxView BackgroundColor="Black"
+                         Grid.Row="1" 
+                         Grid.Column="0"
+                        HeightRequest="15" 
+                         WidthRequest="2" 
+                         HorizontalOptions="End"
+                         VerticalOptions="FillAndExpand"/>
+
+                        <Label Text="{Binding FirstName}" 
+                       Grid.Row="1" 
+                       Grid.Column="1"
+                       TextColor="White"
+                        HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       />
+
+                        <Label Text="Last Name" 
+                       Grid.Row="2" 
+                       Grid.Column="0"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       />
+
+                        <BoxView BackgroundColor="Black"
+                         Grid.Row="2" 
+                         Grid.Column="0"
+                         HeightRequest="15" 
+                         WidthRequest="2" 
+                         HorizontalOptions="End"
+                         VerticalOptions="FillAndExpand"/>
+
+                        <Label Text="{Binding LastName}"
+                       Grid.Row="2" 
+                       Grid.Column="1"
+                       TextColor="White"
+                        HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       />
+
+
+                    </Grid>
+
+                </Frame>
+
+                <Button Text="Create a Post"
+                        Grid.Row="2"
+                        BackgroundColor="DodgerBlue" 
+                        VerticalOptions="Center" 
+                        HorizontalOptions="Center"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="LinkedInPostPage"
+                        IsVisible="{Binding IsPostBtnVisible, Mode=TwoWay}"
+                        />
+
+                <Button Text="Do CheckIn"
+                        Grid.Row="2"
+                        VerticalOptions="Center"
+                        Margin="10"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="GetVenuesListPage"
+                        IsVisible="{Binding IsCheckInBtnVisible, Mode=TwoWay}"
+                        />
+            </Grid>
+
+            <ActivityIndicator IsRunning="{Binding IsRunning}" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

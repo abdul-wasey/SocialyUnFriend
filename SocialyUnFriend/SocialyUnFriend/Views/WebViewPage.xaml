@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:behaviours="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             mc:Ignorable="d"
+             x:Class="SocialyUnFriend.Views.WebViewPage"
+             NavigationPage.BackButtonTitle="Back"
+             Title="Authentication Page"
+             >
+    <ContentPage.Content>
+        <ScrollView VerticalScrollBarVisibility="Never">
+            <StackLayout>
+                <WebView Source="{Binding Url}" 
+                     HeightRequest="800" 
+                     WidthRequest="800">
+                    <WebView.Behaviors>
+
+                        <behaviours:EventToCommandBehavior EventName="Navigated"
+                                                       EventArgsParameterPath="Url"
+                                                       Command="{Binding WebViewNavigatingCommand}"
+                        
+                    />
+                    </WebView.Behaviors>
+                </WebView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

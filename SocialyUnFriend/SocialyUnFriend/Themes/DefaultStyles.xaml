@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary  xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SocialyUnFriend.Themes.DefaultStyles">
+
+
+      <!--global style for Entry (text box) --> 
+
+    <Style TargetType="Entry">
+      
+        <Setter Property="TextColor" Value="White" />
+        
+        <Setter Property="BackgroundColor" Value="Black" />
+
+        <Setter Property="PlaceholderColor" Value="Green" />
+
+        <Setter Property="Opacity" Value="0.18" />
+
+    </Style>
+
+    <!--global style for switch (toggle button) -->
+    
+    <Style TargetType="Switch">
+      
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="OnColor" Value="Green" />
+        <Setter Property="ThumbColor" Value="Blue" />
+        
+    </Style>
+
+
+    <!-- global style for CheckBox -->
+    <Style TargetType="CheckBox">
+        
+        
+        <Setter Property="BackgroundColor"  Value="White" />
+        
+        <!-- CheckBox tick color -->
+        <Setter Property="Color" Value="DodgerBlue" />
+        
+      
+    </Style>
+
+      <!--global style for button -->
+
+    <Style TargetType="Button">
+        
+        <!-- Button Label Text Color -->
+        <Setter Property="TextColor" Value="White" />
+
+        <Setter Property="BackgroundColor" Value="Green" />
+
+        <Setter Property="BorderColor" Value="White" />
+
+        <!-- for Button Corner -->
+        <Setter Property="CornerRadius" Value="8" />
+
+    </Style>
+
+     <!-- global style for native Loader -->
+
+    <Style TargetType="ActivityIndicator">
+
+        <Setter Property="Color" Value="Red" />
+        
+        <Setter Property="BackgroundColor" Value="Transparent" />
+      
+        <Setter Property="HeightRequest" Value="60" />
+
+        <Setter Property="WidthRequest" Value="60" />
+
+    </Style>
+
+
+      <!--global style for Navigation Page --> 
+
+    <Style TargetType="NavigationPage">
+        
+        <Setter Property="BarBackgroundColor"  Value="#1C2B40"/>
+        
+        <Setter Property="BackgroundColor" Value="White" />
+        
+        <Setter Property="BarTextColor"  Value="White" />
+    </Style>
+
+      <!-- global style for label -->
+    
+    <Style TargetType="Label">
+        
+        <Setter Property="TextColor" Value="WhiteSmoke" />
+        
+        <Setter Property="Opacity" Value="0.2" />
+        
+        <Setter Property="FontSize" Value="Medium" />
+        
+        <Setter Property="FontAttributes" Value="Bold" />
+            
+        <Setter Property="BackgroundColor" Value="White" />
+
+    </Style>
+
+     <!-- global style for BoxView -->  
+    <Style TargetType="BoxView">
+
+        <Setter Property="Color"  Value="Black" />
+
+    </Style>
+
+    <!-- global style for Search Bar -->
+   
+    <Style TargetType="SearchBar">
+
+        <Setter Property="TextColor"  Value="Black" />
+
+        <Setter Property="PlaceholderColor"  Value="Green" />
+
+        <Setter Property="CancelButtonColor"  Value="Red" />
+
+        <Setter Property="FontAttributes"  Value="Bold" />
+
+        <Setter Property="FontSize"  Value="Medium" />
+
+        <Setter Property="BackgroundColor" Value="#DEDEDE" />
+
+        <Setter Property="Opacity" Value='0.18' />
+
+    </Style>
+
+      <!-- global style for Slider -->
+    <Style TargetType="Slider">
+
+        <Setter Property="ThumbColor"  Value="Blue" />
+        <Setter Property="MinimumTrackColor"  Value="Green" />
+        <Setter Property="MaximumTrackColor"  Value="Red" />
+
+    </Style>
+
+      <!-- global style for DatePicker  -->
+    
+    <Style TargetType="DatePicker">
+
+        <Setter Property="Format"  Value="yyyMMdd" />
+        <Setter Property="TextColor"  Value="Red" />
+        <Setter Property="FontSize"  Value="12" />
+        <Setter Property="FontAttributes" Value="Bold" />
+
+        <Setter Property="BackgroundColor" Value="#DEDEDE" />
+
+    </Style>
+
+      <!-- global style for DatePicker  -->
+
+    <Style TargetType="TimePicker">
+
+        <Setter Property="Format"  Value="H:mm:ss" />
+        <Setter Property="TextColor"  Value="Red" />
+        <Setter Property="FontSize"  Value="12" />
+        <Setter Property="FontAttributes" Value="Bold" />
+
+    </Style>
+
+     <!-- global style for Picker (Spinner) -->
+    
+    <Style TargetType="Picker">
+
+        <Setter Property="Title" Value="Select an item" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="FontAttributes" Value="None" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+
+    <!-- global style for ProgressBar -->
+
+    <Style TargetType="ProgressBar">
+
+        <Setter Property="Progress"  Value="0.5" />
+        <Setter Property="ProgressColor"  Value="Orange" />
+        <Setter Property="BackgroundColor" Value="White" />
+
+    </Style>
+
+</ResourceDictionary>
