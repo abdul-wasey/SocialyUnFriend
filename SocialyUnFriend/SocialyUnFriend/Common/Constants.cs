@@ -18,6 +18,10 @@ namespace SocialyUnFriend.Common
 
         public const string LinkedInPostShareUrl = "https://api.linkedin.com/v2/shares";
 
+        public const string LinkedInUGCShareUrl = "https://api.linkedin.com/v2/ugcPosts";
+
+        public const string LinkedInRegisterUploadUrl = "https://api.linkedin.com/v2/assets?action=registerUpload";   // Belongs to LinkedIn Assests Api,
+
         public const string RedirectURI = "https://www.linkedin.com/oauth-success";
 
         public const string AccessTokenURL = "https://www.linkedin.com/oauth/v2/accessToken";
@@ -30,7 +34,7 @@ namespace SocialyUnFriend.Common
 
         #endregion
 
-        #region LinkedIn Ceredentials
+        #region FourSquare Ceredentials
 
         public const string FSClientID = "ZN0QUUTGYP0LRAN53HLSRWSD45DCRLM1LIH0HQEF2T05WBIX";
         public const string FSClientSecret = "ZGCEFLSASFDVT3JMWFL40TZ5VMAEAGBYNNRCJKXGSZMMYPSC";

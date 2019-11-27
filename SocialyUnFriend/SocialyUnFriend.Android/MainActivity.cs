@@ -12,6 +12,7 @@ using System.IO;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Plugin.CurrentActivity;
 
 namespace SocialyUnFriend.Droid
 {
@@ -28,7 +29,7 @@ namespace SocialyUnFriend.Droid
              
             base.OnCreate(savedInstanceState);
 
-           
+            CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");

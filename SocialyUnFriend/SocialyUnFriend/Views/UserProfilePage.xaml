@@ -136,9 +136,8 @@
 
                 <Button Text="Create a Post"
                         Grid.Row="2"
-                        BackgroundColor="DodgerBlue" 
+                         Margin="10"
                         VerticalOptions="Center" 
-                        HorizontalOptions="Center"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="LinkedInPostPage"
                         IsVisible="{Binding IsPostBtnVisible, Mode=TwoWay}"

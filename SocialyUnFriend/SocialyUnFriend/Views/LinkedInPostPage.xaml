@@ -5,37 +5,99 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SocialyUnFriend.Views.LinkedInPostPage"
              Title="Create a Post"
-             xmlns:customRenderer="clr-namespace:SocialyUnFriend.CustomRenderers">
+             xmlns:customRenderer="clr-namespace:SocialyUnFriend.CustomRenderers"
+             xmlns:ffImageLoading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms">
 
 
-    <Grid Padding="15">
+    <Grid>
+    <Grid RowSpacing="0">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <ffImageLoading:CachedImage Source="logo.png" 
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center" 
+                                    Aspect="AspectFill"
+                                    Grid.Row="0"/>
 
         <Frame BackgroundColor="White"
+               Grid.Row="1"
                Padding="0"
                HasShadow="True"
                VerticalOptions="CenterAndExpand"
-               HorizontalOptions="FillAndExpand">
+               HorizontalOptions="FillAndExpand" 
+               Margin="10,0,10,50">
 
-            <StackLayout Spacing="0">
-                <BoxView Color="#0073B1" HorizontalOptions="FillAndExpand" HeightRequest="35" />
-                <customRenderer:ExtendedEditorControl HeightRequest="150"
+            <Grid RowSpacing="0">
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <BoxView Color="DodgerBlue" HorizontalOptions="FillAndExpand" />
+                <customRenderer:ExtendedEditorControl
                         Placeholder="What do you want to talk about?"
                         IsExpandable="True"
                         HasRoundedCorner="False"                              
                         PlaceholderColor="LightGray"
                         TextColor="Black" 
-                        Text="{Binding Content}"/>
+                        Text="{Binding Content}"    
+                        VerticalOptions="FillAndExpand"
+                        Grid.Row="1"/>
 
-            </StackLayout>
+
+                <CollectionView ItemsSource="{Binding Pictures}"
+                        ItemsLayout="HorizontalList"
+                        Grid.Row="2">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Frame BackgroundColor="#1B2B3F" 
+                                   Padding="0" CornerRadius="0"
+                                   WidthRequest="100"
+                                   HasShadow="False">
+                                
+                                <ffImageLoading:CachedImage Source="{Binding Image}" Aspect="AspectFill" 
+                                                        LoadingPlaceholder="loading.png"
+                                                        Margin="4,4,4,4"    
+                                                        />
+                            </Frame>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Button Text="Choose Media"
+                        CornerRadius="0"
+                        BackgroundColor="DodgerBlue"
+                        TextColor="White"
+                        Command="{Binding OpenCameraCommand}"
+                        Grid.Row="3"/>
+            </Grid>
+
         </Frame>
-                      <Button        
+        
+        <Button        
                         Text="Post"
+                        Grid.Row="2"
                         Command="{Binding PostCommand}"
                         VerticalOptions="End"
-                        Margin="15"
+                        Margin="10"
                         />
 
-        <ActivityIndicator IsRunning="{Binding IsRunning}" Color="DodgerBlue"/>
+        
     </Grid>
+
+        <ActivityIndicator IsRunning="{Binding IsRunning}" Color="DodgerBlue"/>
+
+    </Grid>
+
 
 </ContentPage>

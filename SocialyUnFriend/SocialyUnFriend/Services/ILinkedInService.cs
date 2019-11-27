@@ -9,6 +9,8 @@ namespace SocialyUnFriend.Services
     public interface ILinkedInService
     {
         Task<ApiResponse<object>> GetUserProfile(string url, string accesToken);
+
+        Task<ApiResponse<object>> RegisterUpload(string url, object model, string accessToken);
         Task<ApiResponse<object>> CreatePost(string url, object model, string accessToken);
     }
 }

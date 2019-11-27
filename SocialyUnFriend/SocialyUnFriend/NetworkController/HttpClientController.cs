@@ -9,6 +9,8 @@ using System.Text;
 using SocialyUnFriend.Model;
 using SocialyUnFriend.Common;
 using Xamarin.Forms;
+using System.IO;
+using System.Globalization;
 
 namespace SocialyUnFriend.NetworkController
 {
@@ -21,6 +23,47 @@ namespace SocialyUnFriend.NetworkController
             _httpClient = httpClient;
         }
 
+        public async Task<ApiResponse<object>> UploadImage(string uploadUrl, byte[] image, string accessToken)
+        {
+            try
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                ByteArrayContent byteArrayContent = new ByteArrayContent(image);
+
+                byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+              
+                var response = await _httpClient.PutAsync(uploadUrl, byteArrayContent);
+
+
+                var result = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new ApiResponse<object>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = result,
+                    };
+                }
+
+
+                return new ApiResponse<object>
+                {
+                    IsSuccess = true,
+                    ResultData = result
+                };
+           
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<object>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
 
         public async Task<ApiResponse<OAuthToken>> GetOAuthTokenAsync(string url, string code, string clientId, string clientSecret, string redirectUrl)
         {
@@ -69,15 +112,19 @@ namespace SocialyUnFriend.NetworkController
 
         }
 
+
         public async Task<ApiResponse<object>> PostAsync(string url, object model, string accesToken)
         {
             try
             {
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accesToken);
+                //_httpClient.DefaultRequestHeaders.Add("X-Restli-Protocol-Version", "2.0.0");
 
                 var json = JsonConvert.SerializeObject(model);
+
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
                 var response = await _httpClient.PostAsync(url, stringContent);
 
 

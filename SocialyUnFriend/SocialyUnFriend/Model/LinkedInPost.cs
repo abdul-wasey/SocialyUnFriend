@@ -40,6 +40,9 @@ namespace SocialyUnFriend.Model
 
         [JsonProperty("thumbnails")]
         public List<Thumbnail> Thumbnails { get; set; }
+
+        //[JsonProperty("entity")]
+        //public string Entity { get; set; }
     }
 
     public class Content
@@ -49,6 +52,9 @@ namespace SocialyUnFriend.Model
 
         [JsonProperty("title")]
         public string Title { get; set; }
+
+        //[JsonProperty("shareMediaCategory")]
+        //public string ShareMediaCategory { get; set; }
     }
 
     public class LinkedInDistributionTarget

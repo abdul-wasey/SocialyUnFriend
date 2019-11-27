@@ -1,15 +1,22 @@
 ﻿using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using SocialyUnFriend.Common;
 using SocialyUnFriend.Model;
+using SocialyUnFriend.NetworkController;
 using SocialyUnFriend.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 
@@ -21,24 +28,33 @@ namespace SocialyUnFriend.ViewModels
         private readonly ILinkedInService _linkedInService;
         private readonly IFourSquareService _fourSquareService;
         private readonly IConnectivity _connectivity;
-
+        private readonly IHttpClientController _httpClientController;
 
         public LinkedInPostPageViewModel(IPageDialogService pageDialogService, ILinkedInService linkedInService, IFourSquareService fourSquareService,
-                                         IConnectivity connectivity)
+                                         IConnectivity connectivity, IHttpClientController httpClientController)
         {
             _pageDialogService = pageDialogService;
             _linkedInService = linkedInService;
             _fourSquareService = fourSquareService;
             _connectivity = connectivity;
+            _httpClientController = httpClientController;
 
+
+            Pictures = new ObservableCollection<PictureModel>();
 
             PostCommand = new DelegateCommand(OnPostCommandExecuted);
+            OpenCameraCommand = new DelegateCommand(OpenCameraCommandExecuted);
 
         }
 
         public DelegateCommand PostCommand { get; }
+        public DelegateCommand OpenCameraCommand { get; }
+
 
         public string checkInID = "";
+        public MediaFile file = null;
+
+
 
         private string _content;
         public string Content
@@ -54,12 +70,17 @@ namespace SocialyUnFriend.ViewModels
             set { SetProperty(ref _isRunning, value); }
         }
 
-        
 
 
-        public IPageDialogService PageDialogService { get; }
+        private ObservableCollection<PictureModel> _pictures;
+        public ObservableCollection<PictureModel> Pictures
+        {
+            get { return _pictures; }
+            set { SetProperty(ref _pictures, value); }
+        }
 
-        private async void OnPostCommandExecuted()
+
+        public async void OnPostCommandExecuted()
         {
 
             try
@@ -102,20 +123,23 @@ namespace SocialyUnFriend.ViewModels
                     return;
                 }
 
-                var model = GetLinkedInPostModel();
+                var model = await GetUGCPostRequestModel();
+
+                if (model == null) return;
 
                 var postResponse = await _linkedInService.CreatePost
-                    (Constants.LinkedInPostShareUrl, model, token);
+                    (Constants.LinkedInUGCShareUrl, model, token);
 
                 if (postResponse.IsSuccess)
                 {
-                    var data = JsonConvert.DeserializeObject<LinkedInPostShareResponse>(postResponse.ResultData.ToString());
+                    Content = string.Empty;
+                    Pictures.Clear();
 
-                    await _pageDialogService.DisplayAlertAsync("Post Created", $"{data.owner} created a post.", "Ok");
+                    await _pageDialogService.DisplayAlertAsync("Post Created", "You just create a post on linked-in.", "Ok");
                 }
                 else
                 {
-                    await _pageDialogService.DisplayAlertAsync("Error", "Something went wrong", "Ok");
+                    await _pageDialogService.DisplayAlertAsync("Error", postResponse.ErrorMessage, "Ok");
                 }
             }
             catch (Exception ex)
@@ -128,39 +152,34 @@ namespace SocialyUnFriend.ViewModels
             }
 
         }
-
-
-        private LinkedInPost GetLinkedInPostModel()
+        public async void OpenCameraCommandExecuted()
         {
-            var model = new LinkedInPost
+            try
             {
-                Content = new Content { Title = "Testing Share Api" }
-            };
-            var entities = new List<ContentEntity>
+                var status = await CrossPermissions.Current.CheckPermissionStatusAsync<PhotosPermission>();
+                if (status != PermissionStatus.Granted)
+                {
+                    status = await CrossPermissions.Current.RequestPermissionAsync<PhotosPermission>();
+                }
+
+                if (status == PermissionStatus.Granted)
+                {
+                    await TakeOrPickPictures();
+                }
+                else if (status != PermissionStatus.Unknown)
+                {
+                    //permission denied
+                    await _pageDialogService.DisplayAlertAsync("Denied!", "Camera Permission is required", "OK");
+                }
+
+
+
+            }
+            catch (Exception ex)
             {
-                new ContentEntity { EntityLocation = "https://www.google.com/" }
 
-            };
-            var thumbs = new List<Thumbnail>
-            {
-                new Thumbnail { ResolvedUrl = "https://www.google.com/" }
-            };
+            }
 
-            model.Content.ContentEntities = entities;
-            model.Content.ContentEntities.First().Thumbnails = thumbs;
-
-            model.Distribution = new Distribution
-            {
-                LinkedInDistributionTarget = new LinkedInDistributionTarget()
-            };
-
-            if(Application.Current.Properties.ContainsKey("userID"))
-                model.Owner = Constants.UrnOwner + (string)Application.Current.Properties["userID"];
-
-            model.Subject = "Example subject of share api";
-            model.Text = new Text { text = Content };
-
-            return model;
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
@@ -175,5 +194,241 @@ namespace SocialyUnFriend.ViewModels
                 checkInID = parameters.GetValue<string>("checkInId");
             }
         }
+
+        private async Task TakeOrPickPictures()
+        {
+            try
+            {
+                var result = await _pageDialogService.DisplayActionSheetAsync("Choose", null, null, "Take Selfie", "Pick Photos","Cancel");
+
+                await CrossMedia.Current.Initialize();
+
+                if (result == "Take Selfie")
+                {
+
+                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                    {
+                        await _pageDialogService.DisplayAlertAsync("No Camera", ":( No camera available.", "OK");
+                        return;
+                    }
+
+                    file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                    {
+                        Directory = "Test",
+                        SaveToAlbum = true,
+                        CompressionQuality = 75,
+                        SaveMetaData = true,
+                        PhotoSize = PhotoSize.Large,
+                        DefaultCamera = CameraDevice.Front
+
+                    });
+
+                    if (file == null)
+                    {
+                        return;
+                    }
+
+                    Pictures.Add(new PictureModel { Image = file.Path });
+                }
+                else if (result == "Pick Photos")
+                {
+                    var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+                    if (status != PermissionStatus.Granted)
+                    {
+                        status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+                    }
+
+                    if (status == PermissionStatus.Granted)
+                    {
+                        var images = await CrossMedia.Current.PickPhotosAsync(new PickMediaOptions
+                        {
+                            CompressionQuality = 75,
+                            PhotoSize = PhotoSize.Large,
+                            SaveMetaData = true
+                        },
+
+                        new MultiPickerOptions
+                        {
+                             AlbumSelectTitle = "Gallery",
+                             BarStyle = MultiPickerBarStyle.BlackOpaque,
+                             LoadingTitle = "Loading...",
+                             PhotoSelectTitle = "Photo Title",
+                             BackButtonTitle = "Back",
+                             DoneButtonTitle = "Ok",
+                             MaximumImagesCount = 5
+
+                        }
+                        );
+
+                        if (images.Count == 0)
+                            return;
+
+                        foreach (var item in images)
+                        {
+                            Pictures.Add(new PictureModel { Image = item.Path });
+                        }
+                    }
+                    else if (status != PermissionStatus.Unknown)
+                    {
+                        //permission denied
+                        await _pageDialogService.DisplayAlertAsync("Denied!", "Storage Permission is required", "OK");
+                    }
+
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                if (file != null)
+                    file.Dispose();
+            }
+        }
+
+        private async Task<UGCPostRequestModel> GetUGCPostRequestModel()
+        {
+            try
+            {
+                UGCPostRequestModel uGCPostRequestModel = null;
+
+                string urnAssestForImageSharing = "";
+
+                if (Pictures.Count > 0)
+                {
+                    var regiterUploadModel = new RegisterUpload();
+                    regiterUploadModel.registerUploadRequest = new RegisterUploadRequest
+                    {
+                        recipes = new List<string>()
+                        {
+                               {
+                                    @"urn:li:digitalmediaRecipe:feedshare-image"
+                               }
+                        }
+                    };
+
+
+                    regiterUploadModel.registerUploadRequest.owner = Constants.UrnOwner + Application.Current.Properties["userID"].ToString();
+
+                    regiterUploadModel.registerUploadRequest.serviceRelationships = new List<ServiceRelationship>
+                {
+                    new ServiceRelationship { relationshipType = "OWNER", identifier = "urn:li:userGeneratedContent" }
+                };
+
+                    var response = await _linkedInService.RegisterUpload(Constants.LinkedInRegisterUploadUrl,
+                                                                         regiterUploadModel,
+                                                                         Application.Current.Properties["acces_token"].ToString());
+
+                    if (response.IsSuccess)
+                    {
+                        var data = JsonConvert.DeserializeObject<RegisterUploadResponse>(response.ResultData.ToString());
+
+                        var uploadUrl = data.value.uploadMechanism.MediaUploadHttpRequest.UpLoadUrl;
+
+                        urnAssestForImageSharing = data.value.asset;
+
+                        //foreach (var item in Pictures)
+                        //{
+                            await _httpClientController.UploadImage(uploadUrl, ImageHelper.UriPathToBytes(Pictures.Last().Image), 
+                                                                    Application.Current.Properties["acces_token"].ToString());
+                        //}
+                        
+
+                        uGCPostRequestModel = UGCShareTextWithImageModel(urnAssestForImageSharing);
+                    }
+                }
+                else
+                {
+                    uGCPostRequestModel = UGCShareTextModel();
+                }
+
+
+                return uGCPostRequestModel;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private UGCPostRequestModel UGCShareTextModel()
+        {
+            var shareTextModel = new UGCPostRequestModel
+            {
+                author = Constants.UrnOwner + Application.Current.Properties["userID"].ToString(),
+                lifecycleState = "PUBLISHED",
+                specificContent = new SpecificContent
+                {
+                    ShareContent = new ComLinkedinUgcShareContent
+                    {
+                        shareCommentary = new ShareCommentary
+                        {
+                            text = Content
+                        },
+
+                        shareMediaCategory = "NONE",
+
+                        media = new List<Medium>()
+
+                    }
+                },
+
+                visibility = new Visibility { MemberNetworkVisibility = "PUBLIC" }
+            };
+
+            return shareTextModel;
+        }
+
+        private UGCPostRequestModel UGCShareTextWithImageModel(string urnAssets)
+        {
+            var model = new UGCPostRequestModel
+            {
+                author = Constants.UrnOwner + Application.Current.Properties["userID"].ToString(),
+                lifecycleState = "PUBLISHED",
+                specificContent = new SpecificContent
+                {
+                    ShareContent = new ComLinkedinUgcShareContent
+                    {
+                        shareCommentary = new ShareCommentary
+                        {
+                            text = string.IsNullOrEmpty(Content)  ? "  " : Content
+                        },
+
+                        shareMediaCategory = "IMAGE",
+
+                        media = new List<Medium>
+                        {
+                            new Medium
+                            {
+                                status = "READY" ,
+                                description = new Description
+                                {
+                                    text = "Description of Image"
+                                },
+
+                                media = urnAssets,
+
+                                title = new Title
+                                {
+                                    text = "title of image"
+                                }
+                            }
+                        }
+
+                    }
+                },
+
+                visibility = new Visibility { MemberNetworkVisibility = "PUBLIC" }
+            };
+
+            return model;
+        }
+
+
     }
 }

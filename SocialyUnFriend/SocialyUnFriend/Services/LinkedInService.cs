@@ -25,5 +25,10 @@ namespace SocialyUnFriend.Services
         {
             return await _httpClientController.PostAsync(url, model, accessToken);
         }
+
+        public async Task<ApiResponse<object>> RegisterUpload(string url, object model, string accessToken)
+        {
+            return await _httpClientController.PostAsync(url, model, accessToken);
+        }
     }
 }
