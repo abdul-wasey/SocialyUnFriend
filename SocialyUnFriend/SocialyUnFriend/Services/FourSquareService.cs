@@ -37,5 +37,10 @@ namespace SocialyUnFriend.Services
         {
             return _httpClientController.AddCheckinPost(url, checkInId, text, vDate, accessToken);
         }
+
+        public Task<ApiResponse<object>> AddPhoto(string url, string accessToken, string checkInId, byte[] photo, string text, string vDate)
+        {
+            return _httpClientController.AddPhotoFourSquare(url, accessToken, checkInId, photo, text, vDate);
+        }
     }
 }

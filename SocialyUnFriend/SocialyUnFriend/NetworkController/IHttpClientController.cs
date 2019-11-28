@@ -19,6 +19,8 @@ namespace SocialyUnFriend.NetworkController
         Task<ApiResponse<object>> AddCheckinPost(string url, string checkInId, string text, string vDate, string accessToken);
 
         Task<ApiResponse<object>> UploadImage(string uploadUrl, byte[] image, string accessToken);
+
+        Task<ApiResponse<object>> AddPhotoFourSquare(string url, string accessToken, string checkInId, byte[] photo, string text, string vDate);
  
     }
 }

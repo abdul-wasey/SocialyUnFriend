@@ -7,12 +7,12 @@ using SocialyUnFriend.Model;
 using Xamarin.Forms;
 using System.Linq;
 using Prism.Navigation;
-using SocialyUnFriend.Views;
 using Microsoft.AppCenter.Crashes;
 using System.Collections.Generic;
 using Xamarin.Essentials.Interfaces;
 using Prism.Services;
 using Xamarin.Essentials;
+using PropertyChanged;
 
 namespace SocialyUnFriend.ViewModels
 {
@@ -45,79 +45,22 @@ namespace SocialyUnFriend.ViewModels
             _connectivity.ConnectivityChanged -= _connectivity_ConnectivityChanged;
         }
 
-        private async void _connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
-        {
-            if (_connectivity.NetworkAccess != NetworkAccess.Internet)
-                await _pageDialogService.DisplayAlertAsync("Connection Error", "Internet is not available.", "Ok");
-            else
-            {
-                if (IsPostBtnVisible)
-                    LoadLinkedInUserProfile();
-                else
-                    LoadFourSquareUserProfile();
-            }
-        }
-
+       
+        [DoNotNotify]
         public DelegateCommand<string> NavigateCommand { get; }
 
 
-        public async void NavigateCommandExecuted(string pageName)
-        {
-            
-            await _navigationService.NavigateAsync(pageName);
-           
-        }
+        public async void NavigateCommandExecuted(string pageName) => await _navigationService.NavigateAsync(pageName);
 
 
-        private string _image;
-        public string Image
-        {
-            get { return _image; }
-            set { SetProperty(ref _image, value); }
-        }
+        public string Image { get; set; }
+        public string ProfileId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public bool IsPostBtnVisible { get; set; }
+        public bool IsCheckInBtnVisible { get; set; }
+        public bool IsRunning { get; set; }
 
-        private string _profileId;
-        public string ProfileId
-        {
-            get { return _profileId; }
-            set { SetProperty(ref _profileId, value); }
-        }
-        private string _firstName;
-        public string FirstName
-        {
-            get { return _firstName; }
-            set { SetProperty(ref _firstName, value); }
-        }
-        private string _lastName;
-        public string LastName
-        {
-            get { return _lastName; }
-            set { SetProperty(ref _lastName, value); }
-        }
-
-
-        private bool _isPostBtnVisible = false;
-        public bool IsPostBtnVisible
-        {
-            get { return _isPostBtnVisible; }
-            set { SetProperty(ref _isPostBtnVisible, value); }
-        }
-
-        private bool _isCheckInBtnVisible = false;
-        public bool IsCheckInBtnVisible
-        {
-            get { return _isCheckInBtnVisible; }
-            set { SetProperty(ref _isCheckInBtnVisible, value); }
-        }
-
-
-
-        private bool _isRunning;
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-            set { SetProperty(ref _isRunning, value); }
-        }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
@@ -245,6 +188,19 @@ namespace SocialyUnFriend.ViewModels
             finally
             {
                 IsRunning = false;
+            }
+        }
+
+        private async void _connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            if (_connectivity.NetworkAccess != NetworkAccess.Internet)
+                await _pageDialogService.DisplayAlertAsync("Connection Error", "Internet is not available.", "Ok");
+            else
+            {
+                if (IsPostBtnVisible)
+                    LoadLinkedInUserProfile();
+                else
+                    LoadFourSquareUserProfile();
             }
         }
     }

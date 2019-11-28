@@ -14,9 +14,11 @@ using Xamarin.Essentials.Interfaces;
 using Xamarin.Essentials;
 using SocialyUnFriend.Repositories;
 using Microsoft.AppCenter.Crashes;
+using PropertyChanged;
 
 namespace SocialyUnFriend.ViewModels
 {
+   
     public class GetVenuesListPageViewModel : BindableBase, INavigatedAware
     {
         private readonly IFourSquareService _fourSquareService;
@@ -52,32 +54,17 @@ namespace SocialyUnFriend.ViewModels
         }
 
 
-
+        [DoNotNotify]
         public DelegateCommand<string> CheckInCommand { get; }
 
-        private ObservableCollection<Venue> _venues;
-
-
-        public ObservableCollection<Venue> Venues
-        {
-            get { return _venues; }
-            set { SetProperty(ref _venues, value); }
-        }
-
-        private bool _isRunning;
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-            set { SetProperty(ref _isRunning, value); }
-        }
+        public ObservableCollection<Venue> Venues { get; set; }
+        public bool IsRunning { get; set; }
 
 
         public async void CheckInCommandExecuted(string venueId)
         {
             try
             {
-
-
                 IsRunning = true;
 
                 if (_connectivity.NetworkAccess != NetworkAccess.Internet)

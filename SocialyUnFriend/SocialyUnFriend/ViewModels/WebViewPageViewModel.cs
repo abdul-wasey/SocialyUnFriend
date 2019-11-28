@@ -9,6 +9,7 @@ using SocialyUnFriend.NetworkController;
 using System.Web;
 using Xamarin.Forms;
 using SocialyUnFriend.Model;
+using PropertyChanged;
 
 namespace SocialyUnFriend.ViewModels
 {
@@ -26,6 +27,27 @@ namespace SocialyUnFriend.ViewModels
 
             WebViewNavigatingCommand = new DelegateCommand<string>(OnNavigating);
             
+        }
+
+        [DoNotNotify]
+        public DelegateCommand<string> WebViewNavigatingCommand { get; }
+
+
+        public string Url { get; set; }
+      
+
+
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            
+        }
+
+        public void OnNavigatedTo(INavigationParameters parameters)
+        {
+            if (parameters.ContainsKey("url"))
+            {
+                Url = parameters.GetValue<string>("url");
+            }
         }
 
         private async void OnNavigating(string url)
@@ -54,21 +76,21 @@ namespace SocialyUnFriend.ViewModels
                     {
                         string accessTokenUrl = "";
                         ApiResponse<OAuthToken> tokenResponse = new ApiResponse<OAuthToken>();
-                        
+
                         if (isLinkedInRedirectUri)
                         {
                             accessTokenUrl = OAuthConfig.AccessTokenUrl(SocialMediaPlatform.LinkedIn);
                             tokenResponse = await _httpClientController.GetOAuthTokenAsync
-                                                      (accessTokenUrl, code, Constants.ClientID,Constants.ClientSecret,Constants.RedirectURI);
+                                                      (accessTokenUrl, code, Constants.ClientID, Constants.ClientSecret, Constants.RedirectURI);
 
                             Application.Current.Properties["LoginAs"] = Convert.ToInt32(SocialMediaPlatform.LinkedIn);
-                        
+
                         }
                         else if (isFourSquareRedirectUri)
                         {
                             accessTokenUrl = OAuthConfig.AccessTokenUrl(SocialMediaPlatform.FourSquare);
                             tokenResponse = await _httpClientController.GetOAuthTokenAsync
-                                                       (accessTokenUrl, code, Constants.FSClientID,Constants.FSClientSecret,Constants.FSRedirectLink);
+                                                       (accessTokenUrl, code, Constants.FSClientID, Constants.FSClientSecret, Constants.FSRedirectLink);
 
                             Application.Current.Properties["LoginAs"] = Convert.ToInt32(SocialMediaPlatform.FourSquare);
                         }
@@ -77,7 +99,7 @@ namespace SocialyUnFriend.ViewModels
                         {
                             Application.Current.Properties["acces_token"] = tokenResponse.ResultData.AccessToken;
                             Application.Current.Properties["expires_in"] = tokenResponse.ResultData.ExpireDate;
-                            
+
 
                             await Application.Current.SavePropertiesAsync();
 
@@ -97,29 +119,6 @@ namespace SocialyUnFriend.ViewModels
             catch (Exception)
             {
 
-            }
-        }
-
-        public DelegateCommand<string> WebViewNavigatingCommand { get; }
-
-        private string _url;
-        public string Url
-        {
-            get { return _url; }
-            set { SetProperty(ref _url, value); }
-        }
-
-
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            
-        }
-
-        public void OnNavigatedTo(INavigationParameters parameters)
-        {
-            if (parameters.ContainsKey("url"))
-            {
-                Url = parameters.GetValue<string>("url");
             }
         }
     }

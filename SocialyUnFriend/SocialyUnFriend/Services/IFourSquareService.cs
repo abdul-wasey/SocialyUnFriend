@@ -11,7 +11,8 @@ namespace SocialyUnFriend.Services
         Task<ApiResponse<FourSquareProfile>> GetUserProfile(string url, string accesToken,string vDate);
         Task<ApiResponse<Venues>> GetVenueList(string url, string accesToken,string lat,string lng,string vDate);
         Task<ApiResponse<CheckInResponse>> CreateCheckIn(string url, string accesToken,string venueId,string vDate);
-
         Task<ApiResponse<object>> AddCheckinPost(string url, string accessToken, string checkInId,string text, string vDate);
+
+        Task<ApiResponse<object>> AddPhoto(string url, string accessToken, string checkInId, byte[] photo ,string text , string vDate);
     }
 }

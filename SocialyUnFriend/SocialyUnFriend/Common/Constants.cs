@@ -49,6 +49,8 @@ namespace SocialyUnFriend.Common
 
         public const string FSCheckInPostURL = "https://api.foursquare.com/v2/checkins/";
 
+        public const string FSAddPhotoURL = "https://api.foursquare.com/v2/photos/add";
+
         #endregion
 
         public static string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "FourSquare.db");

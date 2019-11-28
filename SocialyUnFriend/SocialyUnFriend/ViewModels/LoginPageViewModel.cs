@@ -3,12 +3,14 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
+using PropertyChanged;
 using SocialyUnFriend.Common;
 using System.Threading.Tasks;
 using Xamarin.Essentials.Interfaces;
 
 namespace SocialyUnFriend.ViewModels
 {
+    
     public class LoginPageViewModel : BindableBase
     {
         private readonly INavigationService _navigationService;
@@ -26,14 +28,10 @@ namespace SocialyUnFriend.ViewModels
             
         }
 
+        [DoNotNotify]
         public DelegateCommand<string> NavigationCommand { get; }
 
-        private bool _isRunning;
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-            set { SetProperty(ref _isRunning, value); }
-        }
+        public bool IsRunning { get; set; }
 
         private async void OnNavigationCommandExecuted(string platform)
         {

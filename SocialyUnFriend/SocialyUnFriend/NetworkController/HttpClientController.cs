@@ -374,6 +374,51 @@ namespace SocialyUnFriend.NetworkController
             }
         }
 
+        public async Task<ApiResponse<object>> AddPhotoFourSquare(string url, string accessToken, string checkInId, byte[] photo, string text, string vDate)
+        {
+            try
+            {
+                
+                var urlEncoded = string.Format(url + "?oauth_token={0}&checkinId={1}&postText={2}&v={3}&public=1",accessToken,checkInId,text,vDate);
+
+                var formDatacontent = new MultipartFormDataContent("file");
+
+                ByteArrayContent byteArrayContent = new ByteArrayContent(photo);
+
+                byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+
+                formDatacontent.Add(byteArrayContent,"imageContent", "file"); // filename parameter is required
+
+                var response = await _httpClient.PostAsync(urlEncoded, formDatacontent);
+
+                var result = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new ApiResponse<object>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = result,
+                    };
+                }
+
+
+                return new ApiResponse<object>
+                {
+                    IsSuccess = true,
+                    ResultData = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<object>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
 
         #endregion
     }
