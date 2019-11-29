@@ -35,7 +35,7 @@ namespace SocialyUnFriend
                 await NavigationService.NavigateAsync("NavigationPage/UserProfilePage");
             else
                 //MainPage = new NavigationPage(new LoginPage());
-                await NavigationService.NavigateAsync("NavigationPage/LoginPage");
+                await NavigationService.NavigateAsync("NavigationPage/WelcomePage");
 
         }
 

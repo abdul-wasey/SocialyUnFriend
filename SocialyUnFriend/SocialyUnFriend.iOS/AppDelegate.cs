@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CarouselView.FormsPlugin.iOS;
 using FFImageLoading.Forms.Platform;
 using Foundation;
 using UIKit;
@@ -25,15 +26,20 @@ namespace SocialyUnFriend.iOS
         {
 
 
-            Forms.SetFlags("CollectionView_Experimental");
-
+           
             SQLitePCL.Batteries_V2.Init();
+
+
+            Forms.SetFlags("CollectionView_Experimental");
 
             global::Xamarin.Forms.Forms.Init();
 
+           
 
             CachedImageRenderer.Init();
             CachedImageRenderer.InitImageSourceHandler();
+            CarouselViewRenderer.Init();
+
 
             LoadApplication(new App());
 

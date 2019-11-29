@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cv="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
+             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:ffImageLoading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             mc:Ignorable="d"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="SocialyUnFriend.Views.WelcomePage"
+             NavigationPage.HasNavigationBar="False">
+
+    <pancake:PancakeView>
+
+        <Grid Padding="0" Margin="15,0,15,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <cv:CarouselViewControl ItemsSource="{Binding WelcomePages}"
+                                    ShowIndicators="true" 
+                                    IndicatorsShape="Circle" 
+                                    IndicatorsTintColor="LightGray"
+                                    CurrentPageIndicatorTintColor="#03A9F4"
+                                    Orientation="Horizontal" 
+                                    InterPageSpacing="0" 
+                                    AnimateTransition="True"
+                                    Grid.Row="1">
+                <cv:CarouselViewControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <ffImageLoading:CachedImage 
+                                   Source="{Binding Image}" 
+                                   DownsampleToViewSize="true"
+                                   DownsampleWidth="300"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Label Text="{Binding Title}" 
+                                   TextColor="White" 
+                                   FontSize="22" 
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding Description}" 
+                                   TextColor="White" 
+                                   FontSize="16"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+
+                    </DataTemplate>
+                </cv:CarouselViewControl.ItemTemplate>
+            </cv:CarouselViewControl>
+
+            <Button Grid.Row="2" 
+                    Text="GET STARTED" 
+                    Margin="20"
+                    Command="{Binding GetStartedCommand}"/>
+
+        </Grid>
+
+    </pancake:PancakeView>
+</ContentPage>

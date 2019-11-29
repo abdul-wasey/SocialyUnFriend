@@ -13,10 +13,11 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Plugin.CurrentActivity;
+using CarouselView.FormsPlugin.Android;
 
 namespace SocialyUnFriend.Droid
 {
-    [Activity(Label = "SocialyUnFriend", Icon = "@drawable/icon", Theme = "@style/Theme.Splash", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "SocialPost", Icon = "@drawable/icon", Theme = "@style/Theme.Splash", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -32,9 +33,12 @@ namespace SocialyUnFriend.Droid
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            CarouselViewRenderer.Init();
 
             CachedImageRenderer.Init(true);
 

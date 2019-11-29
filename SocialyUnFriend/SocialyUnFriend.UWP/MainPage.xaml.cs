@@ -1,7 +1,9 @@
-﻿using System;
+﻿using CarouselView.FormsPlugin.UWP;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -20,6 +22,11 @@ namespace SocialyUnFriend.UWP
         public MainPage()
         {
             this.InitializeComponent();
+
+            List<Assembly> assembliesToInclude = new List<Assembly>
+            {
+                typeof(CarouselViewRenderer).GetTypeInfo().Assembly
+            };
 
             LoadApplication(new SocialyUnFriend.App());
         }

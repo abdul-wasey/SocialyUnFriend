@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms.Extended"
+             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"           
              x:Class="SocialyUnFriend.App">
 
     <Application.Resources>
@@ -13,6 +14,13 @@
 
             <!--  global style for Navigation Bar  -->
 
+            <Style TargetType="pancake:PancakeView">
+
+                <Setter Property="BackgroundGradientStartColor" Value="#303F9F"/>
+                <Setter Property="BackgroundGradientEndColor" Value="#03A9F4"/>
+                <Setter Property="BackgroundGradientAngle" Value="100"/>
+                
+            </Style>
 
             <Style TargetType="NavigationPage">
 
@@ -24,10 +32,10 @@
             
             <Style TargetType="Button">
 
-                <Setter Property="BackgroundColor" Value="#8CE4D6" />
-                <Setter Property="TextColor" Value="#343434 " />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="#3FFF" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BorderColor" Value="#CFFF" />
+                <Setter Property="BorderWidth" Value=".5" />
                 
 
             </Style>

@@ -5,13 +5,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:cacheImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              mc:Ignorable="d"
              x:Class="SocialyUnFriend.Views.LoginPage"
              NavigationPage.HasNavigationBar="False"
              >
-   
-        <Grid>
 
+    <pancake:PancakeView>
+        <Grid>
             <Grid Padding="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3*"/>
@@ -19,38 +21,27 @@
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
 
-                <Image Margin="0,30,0,0"
+                <cacheImage:CachedImage 
+                  Margin="0,30,0,0"
                   Grid.Row="0"
-                  Source="logo.jpg" 
-                  Aspect="AspectFit"
+                  Source="logo.jpg"
+                  DownsampleToViewSize="True"  
                        
-               />
+                    />
                 <StackLayout Grid.Row="1" 
                          VerticalOptions="CenterAndExpand" 
                          HorizontalOptions="FillAndExpand" 
                          Spacing="0">
 
-                    <Entry Placeholder="Enter Email..." />
-                    <Entry Placeholder="Enter Password..." />
-
-                    <Label Text="OR" 
-                       HorizontalOptions="CenterAndExpand" 
-                       FontAttributes="Bold" 
-                       TextColor="#80FFFFFF" 
-                       TextDecorations="Underline"
-                       FontSize="20"
-                       Margin="10"
-                       />
-                    <Button Text="Login with Linked In"
-                        BackgroundColor="DodgerBlue"
-                        TextColor="White"
+                    <Button 
+                        Text="Login with Linkedin"
                         Margin="5"
+                        BackgroundColor="#E603A9F4"
                         Command="{Binding NavigationCommand}"
-                        CommandParameter="linkedin"    />
+                        CommandParameter="linkedin" />
 
                     <Button Text="Login with FourSquare"
-                        BackgroundColor="#D56048"
-                        TextColor="White"
+                        BackgroundColor="#E6D56048"
                         Margin="5"
                         Command="{Binding NavigationCommand}" 
                         CommandParameter="foursquare" />
@@ -64,5 +55,6 @@
                                IsRunning="{Binding IsRunning}"/>
 
         </Grid>
-    
+    </pancake:PancakeView>
+
 </ContentPage>
