@@ -7,47 +7,149 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:cacheImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:customRenderer="clr-namespace:SocialyUnFriend.CustomRenderers"
              mc:Ignorable="d"
              x:Class="SocialyUnFriend.Views.LoginPage"
              NavigationPage.HasNavigationBar="False"
-             >
+             x:Name="page">
 
     <pancake:PancakeView>
         <Grid>
-            <Grid Padding="10">
+            <Grid Padding="10" RowSpacing="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="5*"/>
-                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="6*"/>
                 </Grid.RowDefinitions>
 
                 <cacheImage:CachedImage 
-                  Margin="0,30,0,0"
                   Grid.Row="0"
-                  Source="logo.jpg"
-                  DownsampleToViewSize="True"  
-                       
+                  Source="logo.png"
+                  Aspect="AspectFit"  
                     />
-                <StackLayout Grid.Row="1" 
-                         VerticalOptions="CenterAndExpand" 
-                         HorizontalOptions="FillAndExpand" 
-                         Spacing="0">
 
-                    <Button 
-                        Text="Login with Linkedin"
-                        Margin="5"
-                        BackgroundColor="#E603A9F4"
-                        Command="{Binding NavigationCommand}"
-                        CommandParameter="linkedin" />
+                <ListView Grid.Row="1"
+                          ItemsSource="{Binding Items, Mode=TwoWay}" 
+                          SelectionMode="None"
+                          BackgroundColor="Transparent"
+                          SeparatorVisibility="None">
 
-                    <Button Text="Login with FourSquare"
-                        BackgroundColor="#E6D56048"
-                        Margin="5"
-                        Command="{Binding NavigationCommand}" 
-                        CommandParameter="foursquare" />
+                    <!--<ListView.Behaviors>
+                        <prism:EventToCommandBehavior 
+                            Command="{Binding NavigationCommand}" 
+                            EventName="ItemTapped" 
+                            EventArgsParameterPath="Item" />
+                    </ListView.Behaviors>-->
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                             
+                                    <Grid ColumnSpacing="0"
+                                          HorizontalOptions="FillAndExpand"
+                                          Margin="0,2,0,0">
 
-                </StackLayout>
+                                        <Grid.ColumnDefinitions>
+                                            
+                                            <ColumnDefinition Width="45" />
+                                            <ColumnDefinition Width="*" />
 
+                                        </Grid.ColumnDefinitions>
+                                        <cacheImage:CachedImage 
+                                             Source="{Binding ImageSource}"
+                                             BackgroundColor="White"
+                                             />
+
+                                        <Button 
+                                             Grid.Column="1"
+                                             Text="{Binding Text, Mode=TwoWay}"
+                                             VerticalOptions="Center"
+                                             BorderColor="Transparent"
+                                             BorderWidth="0"
+                                             CornerRadius="0"
+                                             BackgroundColor="{Binding Color, Mode=TwoWay}"
+                                             IsEnabled="{Binding IsButtonEnabled, Mode=TwoWay}"
+                                             Command="{Binding Source={x:Reference page}, Path=BindingContext.NavigationCommand}"
+                                             CommandParameter="{Binding .}" />
+                                            
+
+                                    </Grid>
+                                    
+                                
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+              <Frame BackgroundColor="White"
+               Grid.Row="2"
+               Padding="0"
+               HasShadow="False"
+               >
+
+                    <Grid RowSpacing="0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.7*" />
+                            <RowDefinition Height="5*" />
+                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Frame Padding="0"
+                               HasShadow="False"
+                               Grid.Row="0"
+                               HorizontalOptions="FillAndExpand"
+                               BackgroundColor="DodgerBlue"
+                               CornerRadius="0">
+
+                            <StackLayout Orientation="Horizontal" 
+                                         Spacing="0">
+                            <Label Text="Share Your Post" 
+                               TextColor="White"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="Center" 
+                               Margin="8,0,0,0"    
+                               FontSize="16"  
+                               FontAttributes="Bold"    />
+
+                               <Button Text="POST" 
+                                HorizontalOptions="End" 
+                                BorderWidth="0"
+                                Command="{Binding PostCommand}"       
+                                      />
+
+                            </StackLayout>
+
+                        </Frame>
+                      
+                        <customRenderer:ExtendedEditorControl
+                        Placeholder="What do you want to talk about?"
+                        IsExpandable="True"
+                        HasRoundedCorner="False"                              
+                        PlaceholderColor="LightGray"
+                        TextColor="Black" 
+                        Text="{Binding Content}"    
+                        VerticalOptions="FillAndExpand"
+                        Grid.Row="1"/>
+
+                        <cacheImage:CachedImage Source="{Binding Image}" 
+                                                Aspect="AspectFill" 
+                                                        LoadingPlaceholder="loading.png"
+                                                        Margin="4,4,4,4"
+                                                        Grid.Row="2"        
+                                                        />
+
+                        <Button Text="Upload Picture"
+                        CornerRadius="0"
+                        BackgroundColor="DodgerBlue"
+                        BorderWidth="0"        
+                        TextColor="White"
+                        Command="{Binding OpenCameraCommand}"
+                        Grid.Row="3"/>
+                        
+                    </Grid>
+
+                </Frame>
 
             </Grid>
 

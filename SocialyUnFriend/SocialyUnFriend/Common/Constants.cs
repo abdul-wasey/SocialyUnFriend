@@ -65,5 +65,22 @@ namespace SocialyUnFriend.Common
         #endregion
 
 
+
+        #region Persistance Data's Keys
+
+        public const string IsAccessTokenAvailable = "IsAccessTokenAvailable";
+        public const string AccessTokenLinkedin = "AccessTokenLinkedin";
+        public const string AccessTokenLinkedinExpiryDate = "AccessTokenLinkedinExpiryDate";
+        public const string LinkedInUserId = "LinkedInUserId";
+
+
+        public const string AccessTokenFourSquare = "AccessTokenFourSquare";
+        public const string IsLinkedInConnected = "IsLinkedInConnected";
+        public const string IsFourSquareConnected = "IsFourSquareConnected";
+
+
+
+        #endregion
+
     }
 }

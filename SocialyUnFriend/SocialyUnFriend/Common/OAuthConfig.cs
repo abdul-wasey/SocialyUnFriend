@@ -26,6 +26,7 @@ namespace SocialyUnFriend.Common
         public static string AuthProviderUrl(SocialMediaPlatform providerName)
         {
             string url = "";
+
             switch (providerName)
             {
                 case SocialMediaPlatform.LinkedIn:

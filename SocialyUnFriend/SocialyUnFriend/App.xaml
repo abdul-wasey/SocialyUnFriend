@@ -24,7 +24,7 @@
 
             <Style TargetType="NavigationPage">
 
-                <Setter Property="BarBackgroundColor"  Value="#1D76A2"/>
+                <Setter Property="BarBackgroundColor"  Value="#303F9F"/>
                 <Setter Property="BarTextColor"  Value="White" />
                 <Setter Property="BackgroundColor"  Value="#1D76A2"/>
 
@@ -36,7 +36,6 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="BorderColor" Value="#CFFF" />
                 <Setter Property="BorderWidth" Value=".5" />
-                
 
             </Style>
 

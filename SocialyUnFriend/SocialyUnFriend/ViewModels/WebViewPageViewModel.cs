@@ -55,6 +55,7 @@ namespace SocialyUnFriend.ViewModels
             try
             {
                 Uri uri = new Uri(url);
+
                 bool isLinkedInRedirectUri = uri.AbsolutePath.ToLower().Contains("oauth-success");
                 bool isFourSquareRedirectUri = uri.AbsolutePath.ToLower().Contains("announcements");
 
@@ -83,35 +84,38 @@ namespace SocialyUnFriend.ViewModels
                             tokenResponse = await _httpClientController.GetOAuthTokenAsync
                                                       (accessTokenUrl, code, Constants.ClientID, Constants.ClientSecret, Constants.RedirectURI);
 
-                            Application.Current.Properties["LoginAs"] = Convert.ToInt32(SocialMediaPlatform.LinkedIn);
-
                         }
                         else if (isFourSquareRedirectUri)
                         {
                             accessTokenUrl = OAuthConfig.AccessTokenUrl(SocialMediaPlatform.FourSquare);
                             tokenResponse = await _httpClientController.GetOAuthTokenAsync
                                                        (accessTokenUrl, code, Constants.FSClientID, Constants.FSClientSecret, Constants.FSRedirectLink);
-
-                            Application.Current.Properties["LoginAs"] = Convert.ToInt32(SocialMediaPlatform.FourSquare);
                         }
 
                         if (tokenResponse.IsSuccess)
                         {
-                            Application.Current.Properties["acces_token"] = tokenResponse.ResultData.AccessToken;
-                            Application.Current.Properties["expires_in"] = tokenResponse.ResultData.ExpireDate;
+                            if (isLinkedInRedirectUri)
+                            {
+                                Application.Current.Properties[Constants.AccessTokenLinkedin] = tokenResponse.ResultData.AccessToken;
+                                Application.Current.Properties[Constants.AccessTokenLinkedinExpiryDate] = tokenResponse.ResultData.ExpireDate;
+                                Application.Current.Properties[Constants.IsAccessTokenAvailable] = true;
+                                Application.Current.Properties[Constants.IsLinkedInConnected] = true;
 
+                            }
+                            else if (isFourSquareRedirectUri)
+                            {
+                                Application.Current.Properties[Constants.AccessTokenFourSquare] = tokenResponse.ResultData.AccessToken;
+                                Application.Current.Properties[Constants.IsAccessTokenAvailable] = true;
+                                Application.Current.Properties[Constants.IsFourSquareConnected] = true;
+                            }
 
                             await Application.Current.SavePropertiesAsync();
-
-
-                            await _navigationService.NavigateAsync("/NavigationPage/UserProfilePage");
                         }
                         else
-                        {
                             await _pageDialogService.DisplayAlertAsync("Error", tokenResponse.ErrorMessage, "Ok");
-                        }
 
 
+                        await _navigationService.NavigateAsync("/NavigationPage/LoginPage");
                     });
                 }
 

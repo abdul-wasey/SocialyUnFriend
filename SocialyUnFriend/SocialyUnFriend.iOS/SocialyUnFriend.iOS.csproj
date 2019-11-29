@@ -158,9 +158,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\logo.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="Resources\announce_icon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -168,5 +165,11 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\foursquare_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\login_with_linkedin.png" />
   </ItemGroup>
 </Project>
