@@ -30,10 +30,11 @@ namespace SocialyUnFriend.ViewModels
         private readonly ILinkedInService _linkedInService;
         private readonly IFourSquareService _fourSquareService;
         private readonly IHttpClientController _httpClientController;
+        private readonly IGeoLocatorService _geoLocatorService;
 
         public LoginPageViewModel(INavigationService navigationService, IConnectivity connectivity, IPageDialogService pageDialogService,
                                    ILinkedInService linkedInService, IFourSquareService fourSquareService,
-                                   IHttpClientController httpClientController)
+                                   IHttpClientController httpClientController, IGeoLocatorService geoLocatorService)
         {
             _navigationService = navigationService;
             _connectivity = connectivity;
@@ -41,8 +42,8 @@ namespace SocialyUnFriend.ViewModels
             _linkedInService = linkedInService;
             _fourSquareService = fourSquareService;
             _httpClientController = httpClientController;
+            _geoLocatorService = geoLocatorService;
 
-           
 
             NavigationCommand = new DelegateCommand<ImageButtonItem>(OnNavigationCommandExecuted);
             PostCommand = new DelegateCommand(OnPostCommandExecuted);
@@ -67,6 +68,7 @@ namespace SocialyUnFriend.ViewModels
         #region Fields
 
         public string checkInID = "";
+        public string venueID = "";
         public MediaFile file = null;
 
         #endregion
@@ -74,8 +76,11 @@ namespace SocialyUnFriend.ViewModels
         #region Notified Properties
 
         public List<ImageButtonItem> Items { get; set; }
+        public bool IsLinkedInChecked { get; set; } = true;
+        public bool IsFourSquareChecked { get; set; } = true;
 
         public string Content { get; set; }
+        public string LoaderText { get; set; } = "Loading...";
         public string Image { get; set; }
 
         public bool IsRunning { get; set; }
@@ -117,6 +122,7 @@ namespace SocialyUnFriend.ViewModels
 
             try
             {
+
                 if (_connectivity.NetworkAccess != Xamarin.Essentials.NetworkAccess.Internet)
                 {
                     await _pageDialogService.DisplayAlertAsync("Network Error!", "Please turn on your internet", "Ok");
@@ -142,94 +148,86 @@ namespace SocialyUnFriend.ViewModels
 
                 IsRunning = true;
 
-                var linkedInToken = "";
-
-                if (Application.Current.Properties.ContainsKey(Constants.AccessTokenLinkedin))
-                    linkedInToken = Application.Current.Properties[Constants.AccessTokenLinkedin].ToString();
-
-                var model = await GetUGCPostRequestModel(linkedInToken);
-
-                if (model == null) return;
-
-                var postResponse = await _linkedInService.CreatePost
-                    (Constants.LinkedInUGCShareUrl, model, linkedInToken);
-
-                if (postResponse.IsSuccess)
+               
+                if (IsLinkedInChecked)
                 {
-                    Content = string.Empty;
-                    Image = string.Empty;
+                    var linkedInToken = "";
 
-                    await _pageDialogService.DisplayAlertAsync("Post Created", "You just create a post on linked-in.", "Ok");
+                    if (Application.Current.Properties.ContainsKey(Constants.AccessTokenLinkedin))
+                        linkedInToken = Application.Current.Properties[Constants.AccessTokenLinkedin].ToString();
+
+                    var model = await GetUGCPostRequestModel(linkedInToken);
+
+                    if (model == null) return;
+
+                    LoaderText = "Posting on Linkedin...";
+
+                    var postResponse = await _linkedInService.CreatePost
+                        (Constants.LinkedInUGCShareUrl, model, linkedInToken);
+
+                    if (postResponse.IsSuccess)
+                    {
+                        //await _pageDialogService.DisplayAlertAsync("Post Created", "You just create a post on linked-in.", "Ok");
+                    }
+                    else
+                    {
+                        await _pageDialogService.DisplayAlertAsync("Error", postResponse.ErrorMessage, "Ok");
+                    }
+
                 }
-                else
+
+                if (IsFourSquareChecked)
                 {
-                    await _pageDialogService.DisplayAlertAsync("Error", postResponse.ErrorMessage, "Ok");
+                    LoaderText = "Posting on FourSquare...";
+
+                    var fourSquareToken = "";
+                    if (Application.Current.Properties.ContainsKey(Constants.AccessTokenFourSquare))
+                        fourSquareToken = Application.Current.Properties[Constants.AccessTokenFourSquare].ToString();
+
+                    string venueId = await CurrentCheckin(fourSquareToken);
+
+                    if (!string.IsNullOrEmpty(venueId))
+                    {
+                        if (!string.IsNullOrEmpty(Image))
+                        {
+                            ApiResponse<object> response = null;
+
+                            response = await _fourSquareService.AddPhoto(Constants.FSAddPhotoURL, fourSquareToken, venueId,
+                                                                         ImageHelper.UriPathToBytes(Image), Content,
+                                                                         DateTime.Now.ToString("yyyyMMdd"));
+                            if (response.IsSuccess)
+                            {
+                                await _pageDialogService.DisplayAlertAsync("Message!", "Photos Upload at your connected accounts.", "Ok");
+                            }
+                            else
+                            {
+                                await _pageDialogService.DisplayAlertAsync("Error!", "Something Went wrong, please try again later", "Ok");
+                            }
+                        } 
+                    }
+
                 }
 
+                if (!IsFourSquareChecked && !IsLinkedInChecked)
+                {
+                    await _pageDialogService.DisplayAlertAsync("Message!", "Please Check Desired Platform to Proceed.", "Ok");
+                    return;
+                }
 
-                //if (!string.IsNullOrEmpty(checkInID))
-                //{
-
-                //    if (!string.IsNullOrEmpty(Image))
-                //    {
-                //        ApiResponse<object> response = null;
-
-                //        response = await _fourSquareService.AddPhoto(Constants.FSAddPhotoURL, token, checkInID,
-                //                                                     ImageHelper.UriPathToBytes(Image), Content,
-                //                                                     DateTime.Now.ToString("yyyyMMdd"));
-
-
-                //        if (response.IsSuccess)
-                //        {
-                //            await _pageDialogService.DisplayAlertAsync("Message!", "Photos Upload at you Checkin.", "Ok");
-
-                //            Content = string.Empty;
-                //            Image = string.Empty;
-                //        }
-                //        else
-                //        {
-                //            await _pageDialogService.DisplayAlertAsync("Error!", "Something Went wrong, please try again later", "Ok");
-                //        }
-                //    }
-                //    else if (!string.IsNullOrEmpty(Content) && string.IsNullOrEmpty(Image))
-                //    {
-                //        if (Content.Length > 200)
-                //        {
-                //            await _pageDialogService.DisplayAlertAsync("Warning!", "Content should not be greater than 200 characters", "Ok");
-                //            return;
-                //        }
-                //        var response = await _fourSquareService.AddCheckinPost(Constants.FSCheckInPostURL, token, checkInID, Content, DateTime.Now.ToString("yyyyMMdd"));
-
-                //        if (response.IsSuccess)
-                //        {
-                //            await _pageDialogService.DisplayAlertAsync("Message!", "Your post has been created", "Ok");
-
-                //            Content = string.Empty;
-
-                //        }
-                //        else
-                //        {
-                //            await _pageDialogService.DisplayAlertAsync("Error!", "Something Went wrong, please try again later", "Ok");
-                //        }
-                //    }
-                //    else
-                //    {
-                //        await _pageDialogService.DisplayAlertAsync("Message!", "Please enter some text or take selfie to upload.", "Ok");
-
-                //    }
-
-                //    return;
-                //}
-
-
+                Content = string.Empty;
+                Image = string.Empty;
             }
             catch (Exception ex)
             {
                 Crashes.TrackError(ex);
+
+                Content = string.Empty;
+                Image = string.Empty;
             }
             finally
             {
                 IsRunning = false;
+              
             }
 
         }
@@ -264,7 +262,6 @@ namespace SocialyUnFriend.ViewModels
         }
         #endregion
 
-
         #region Private Methods
 
         private void LoadItems()
@@ -273,7 +270,7 @@ namespace SocialyUnFriend.ViewModels
             try
             {
 
-            var items = new List<ImageButtonItem>
+                var items = new List<ImageButtonItem>
             {
                 new ImageButtonItem
                 {
@@ -304,7 +301,7 @@ namespace SocialyUnFriend.ViewModels
                             item.Text = "Connected to Linkedin";
                             item.Color = Color.Gray;
                         }
-                        
+
 
                         if (Application.Current.Properties.ContainsKey(Constants.IsFourSquareConnected) && item.Platform == SocialMediaPlatform.FourSquare)
                         {
@@ -327,7 +324,6 @@ namespace SocialyUnFriend.ViewModels
 
             }
         }
-
         private async Task TakeOrPickPictures()
         {
             try
@@ -414,6 +410,8 @@ namespace SocialyUnFriend.ViewModels
         {
             try
             {
+                var userProfileId = await GetUserProfileId(linkedInToken);
+
                 UGCPostRequestModel uGCPostRequestModel = null;
 
                 string urnAssestForImageSharing = "";
@@ -432,7 +430,7 @@ namespace SocialyUnFriend.ViewModels
                     };
 
 
-                    regiterUploadModel.registerUploadRequest.owner = Constants.UrnOwner + Application.Current.Properties["userID"].ToString();
+                    regiterUploadModel.registerUploadRequest.owner = Constants.UrnOwner + userProfileId;
 
                     regiterUploadModel.registerUploadRequest.serviceRelationships = new List<ServiceRelationship>
                 {
@@ -454,12 +452,12 @@ namespace SocialyUnFriend.ViewModels
                         await _httpClientController.UploadImage(uploadUrl, ImageHelper.UriPathToBytes(Image),
                                                                 linkedInToken);
 
-                        uGCPostRequestModel = await UGCShareTextWithImageModel(urnAssestForImageSharing, linkedInToken);
+                        uGCPostRequestModel =  UGCShareTextWithImageModel(urnAssestForImageSharing, userProfileId);
                     }
                 }
                 else
                 {
-                    uGCPostRequestModel = UGCShareTextModel();
+                    uGCPostRequestModel = UGCShareTextModel(userProfileId);
                 }
 
 
@@ -470,12 +468,11 @@ namespace SocialyUnFriend.ViewModels
                 return null;
             }
         }
-
-        private UGCPostRequestModel UGCShareTextModel()
+        private UGCPostRequestModel UGCShareTextModel(string userProfileId)
         {
             var shareTextModel = new UGCPostRequestModel
             {
-                author = Constants.UrnOwner + Application.Current.Properties["userID"].ToString(),
+                author = Constants.UrnOwner + userProfileId,
                 lifecycleState = "PUBLISHED",
                 specificContent = new SpecificContent
                 {
@@ -498,13 +495,10 @@ namespace SocialyUnFriend.ViewModels
 
             return shareTextModel;
         }
-
-        private async Task<UGCPostRequestModel> UGCShareTextWithImageModel(string urnAssets, string token)
+        private UGCPostRequestModel UGCShareTextWithImageModel(string urnAssets, string userProfileId)
         {
             try
             {
-                var userProfileId = await GetUserProfileId(token);
-
                 var model = new UGCPostRequestModel
                 {
                     author = Constants.UrnOwner + userProfileId,
@@ -552,7 +546,6 @@ namespace SocialyUnFriend.ViewModels
                 return null;
             }
         }
-
         private async Task<string> GetUserProfileId(string token)
         {
             string userId = "";
@@ -570,6 +563,50 @@ namespace SocialyUnFriend.ViewModels
 
 
             return userId;
+        }
+
+
+        private async Task<string> CurrentCheckin(string token)
+        {
+            try
+            {
+
+                await _geoLocatorService.GetLocationAsync();
+
+                var venues = await _fourSquareService.GetVenueList(
+                                                Constants.FSVenueSearchURL, token,
+                                                _geoLocatorService.Latitude.ToString(), _geoLocatorService.Longitude.ToString(),
+                                                DateTime.Now.ToString("yyyyMMdd")
+                                                ).ConfigureAwait(false);
+                if (venues.IsSuccess)
+                {
+                    if (venues.ResultData.response.venues.Count > 0)
+                        venueID = venues.ResultData.response.venues[0].id;
+                    else
+                        await _pageDialogService.DisplayAlertAsync("Not Found", "Can't Create Checkin here.", "Ok");
+                }
+                else
+                {
+                    await _pageDialogService.DisplayAlertAsync("Message", "Something went wrong, please try again later", "Ok");
+                }
+
+                return venueID;
+            }
+            catch (Exception exception)
+            {
+                var properties = new Dictionary<string, string>
+                    {
+                        { "Category", "Venues" },
+                        { "Wifi", "On"}
+                    };
+                Crashes.TrackError(exception, properties);
+
+                return venueID;
+            }
+            finally
+            {
+                IsRunning = false;
+            }
         }
 
         #endregion

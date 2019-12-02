@@ -379,7 +379,7 @@ namespace SocialyUnFriend.NetworkController
             try
             {
                 
-                var urlEncoded = string.Format(url + "?oauth_token={0}&checkinId={1}&postText={2}&v={3}&public=1",accessToken,checkInId,text,vDate);
+                var urlEncoded = string.Format(url + "?oauth_token={0}&venueId={1}&postText={2}&v={3}&public=1", accessToken,checkInId,text,vDate);
 
                 var formDatacontent = new MultipartFormDataContent("file");
 

@@ -25,7 +25,7 @@ namespace SocialyUnFriend.Services
 
             try
             {
-                var request = new GeolocationRequest(GeolocationAccuracy.Medium);
+                var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(15));
                
                 var location = await Geolocation.GetLocationAsync(request);
 

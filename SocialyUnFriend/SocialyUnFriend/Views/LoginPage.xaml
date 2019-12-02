@@ -17,9 +17,10 @@
         <Grid>
             <Grid Padding="10" RowSpacing="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="150"/>
                     <RowDefinition Height="4*"/>
-                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="5.5*"/>
                 </Grid.RowDefinitions>
 
                 <cacheImage:CachedImage 
@@ -28,7 +29,7 @@
                   Aspect="AspectFit"  
                     />
 
-                <ListView Grid.Row="1"
+                <ListView   Grid.Row="1"
                           ItemsSource="{Binding Items, Mode=TwoWay}" 
                           SelectionMode="None"
                           BackgroundColor="Transparent"
@@ -43,23 +44,23 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                             
-                                    <Grid ColumnSpacing="0"
+
+                                <Grid ColumnSpacing="0"
                                           HorizontalOptions="FillAndExpand"
                                           Margin="0,2,0,0">
 
-                                        <Grid.ColumnDefinitions>
-                                            
-                                            <ColumnDefinition Width="45" />
-                                            <ColumnDefinition Width="*" />
+                                    <Grid.ColumnDefinitions>
 
-                                        </Grid.ColumnDefinitions>
-                                        <cacheImage:CachedImage 
+                                        <ColumnDefinition Width="45" />
+                                        <ColumnDefinition Width="*" />
+
+                                    </Grid.ColumnDefinitions>
+                                    <cacheImage:CachedImage 
                                              Source="{Binding ImageSource}"
                                              BackgroundColor="White"
                                              />
 
-                                        <Button 
+                                    <Button 
                                              Grid.Column="1"
                                              Text="{Binding Text, Mode=TwoWay}"
                                              VerticalOptions="Center"
@@ -70,28 +71,46 @@
                                              IsEnabled="{Binding IsButtonEnabled, Mode=TwoWay}"
                                              Command="{Binding Source={x:Reference page}, Path=BindingContext.NavigationCommand}"
                                              CommandParameter="{Binding .}" />
-                                            
 
-                                    </Grid>
-                                    
-                                
+
+                                </Grid>
+
+
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
-              <Frame BackgroundColor="White"
-               Grid.Row="2"
+                <StackLayout Orientation="Horizontal"
+                             Grid.Row="2">
+                    <Label Text="Linkedin" 
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                    <CheckBox BackgroundColor="Transparent" 
+                              Color="White" 
+                              IsChecked="{Binding IsLinkedInChecked}"/>
+                    <Label Text="FourSquare" 
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                    <CheckBox 
+                              Color="White" 
+                              IsChecked="{Binding IsFourSquareChecked}"/>
+                </StackLayout>
+
+                <Frame 
+               
+                  Grid.Row="3"
+                  Margin="0,4,0,0"
+               BackgroundColor="white" 
                Padding="0"
-               HasShadow="False"
-               >
+               HasShadow="False">
 
                     <Grid RowSpacing="0">
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.7*" />
-                            <RowDefinition Height="5*" />
-                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="4*" />
+                            <RowDefinition Height="4*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
@@ -104,7 +123,7 @@
 
                             <StackLayout Orientation="Horizontal" 
                                          Spacing="0">
-                            <Label Text="Share Your Post" 
+                                <Label Text="Share Your Post" 
                                TextColor="White"
                                HorizontalOptions="StartAndExpand"
                                VerticalOptions="Center" 
@@ -112,7 +131,7 @@
                                FontSize="16"  
                                FontAttributes="Bold"    />
 
-                               <Button Text="POST" 
+                                <Button Text="POST" 
                                 HorizontalOptions="End" 
                                 BorderWidth="0"
                                 Command="{Binding PostCommand}"       
@@ -121,7 +140,7 @@
                             </StackLayout>
 
                         </Frame>
-                      
+
                         <customRenderer:ExtendedEditorControl
                         Placeholder="What do you want to talk about?"
                         IsExpandable="True"
@@ -135,7 +154,6 @@
                         <cacheImage:CachedImage Source="{Binding Image}" 
                                                 Aspect="AspectFill" 
                                                         LoadingPlaceholder="loading.png"
-                                                        Margin="4,4,4,4"
                                                         Grid.Row="2"        
                                                         />
 
@@ -145,16 +163,38 @@
                         BorderWidth="0"        
                         TextColor="White"
                         Command="{Binding OpenCameraCommand}"
-                        Grid.Row="3"/>
-                        
+                        Grid.Row="3"
+                               />
+
                     </Grid>
 
                 </Frame>
 
             </Grid>
 
-            <ActivityIndicator  
-                               IsRunning="{Binding IsRunning}"/>
+            <Frame       IsVisible="{Binding IsRunning}"
+                         VerticalOptions="CenterAndExpand"
+                         HorizontalOptions="FillAndExpand"
+                         BackgroundColor="#5B5B5B"
+                         Padding="0"
+                         Margin="30,0,30,0"
+                         BorderColor="WhiteSmoke"
+                         CornerRadius="6"
+                         HasShadow="True">
+
+                <StackLayout Spacing="0">
+                    <ActivityIndicator 
+                        Margin="0,5,0,0"
+                        IsRunning="{Binding IsRunning}"
+                                       />
+                    <Label Text="{Binding LoaderText, Mode=TwoWay}"
+                           TextColor="White" 
+                           FontSize="Medium"
+                           FontAttributes="Italic"
+                           Margin="0,0,0,5"
+                           HorizontalOptions="CenterAndExpand"/>
+                </StackLayout>
+            </Frame>
 
         </Grid>
     </pancake:PancakeView>
