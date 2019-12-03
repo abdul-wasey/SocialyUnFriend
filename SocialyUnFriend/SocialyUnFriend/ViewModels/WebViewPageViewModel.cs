@@ -112,7 +112,7 @@ namespace SocialyUnFriend.ViewModels
                             await Application.Current.SavePropertiesAsync();
                         }
                         else
-                            await _pageDialogService.DisplayAlertAsync("Error", tokenResponse.ErrorMessage, "Ok");
+                            await _pageDialogService.DisplayAlertAsync("Error Message", tokenResponse.ErrorMessage, "Ok");
 
 
                         await _navigationService.NavigateAsync("/NavigationPage/LoginPage");
