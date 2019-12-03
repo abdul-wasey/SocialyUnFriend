@@ -70,7 +70,8 @@
                                              BackgroundColor="{Binding Color, Mode=TwoWay}"
                                              IsEnabled="{Binding IsButtonEnabled, Mode=TwoWay}"
                                              Command="{Binding Source={x:Reference page}, Path=BindingContext.NavigationCommand}"
-                                             CommandParameter="{Binding .}" />
+                                             CommandParameter="{Binding .}" 
+                                             />
 
 
                                 </Grid>

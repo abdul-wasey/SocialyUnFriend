@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using Xamarin.Essentials;
 
 namespace SocialyUnFriend.Common
 {
@@ -53,7 +53,7 @@ namespace SocialyUnFriend.Common
 
         #endregion
 
-        public static string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "FourSquare.db");
+        public static string dbPath = Path.Combine(FileSystem.AppDataDirectory, "FourSquare.db");
 
 
         #region AppCenter Credentials
