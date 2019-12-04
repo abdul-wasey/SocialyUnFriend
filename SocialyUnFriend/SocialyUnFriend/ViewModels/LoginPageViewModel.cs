@@ -94,30 +94,57 @@ namespace SocialyUnFriend.ViewModels
 
         }
 
-        public void OpenDialogCommandExecuted()
+        public async void OpenDialogCommandExecuted()
         {
-            if (Application.Current.Properties.ContainsKey(Constants.IsLinkedInConnected) ||
-                Application.Current.Properties.ContainsKey(Constants.IsFourSquareConnected))
+            // Required Permissions ,, 
+            try
             {
-                if ((bool)Application.Current.Properties[Constants.IsLinkedInConnected])
-                    IsLinkedInConnected = true;
-                else
-                    IsLinkedInConnected = false;
+                var photosPermissionStatus = await Utils.CheckPermissions<PhotosPermission>();
+                var storagePermissionStatus = await Utils.CheckPermissions<StoragePermission>();
+                var locationPermissionStatus = await Utils.CheckPermissions<LocationPermission>();
+                
+                if (locationPermissionStatus == PermissionStatus.Granted && photosPermissionStatus == PermissionStatus.Granted
+                    && storagePermissionStatus == PermissionStatus.Granted)
+                {
+                    if (Application.Current.Properties.ContainsKey(Constants.IsLinkedInConnected) ||
+                        Application.Current.Properties.ContainsKey(Constants.IsFourSquareConnected))
+                    {
+                        if ((bool)Application.Current.Properties[Constants.IsLinkedInConnected])
+                            IsLinkedInConnected = true;
+                        else
+                            IsLinkedInConnected = false;
 
-                if ((bool)Application.Current.Properties[Constants.IsFourSquareConnected])
-                    IsFourSquareConnected = true;
-                else
-                    IsFourSquareConnected = false;
+                        if ((bool)Application.Current.Properties[Constants.IsFourSquareConnected])
+                            IsFourSquareConnected = true;
+                        else
+                            IsFourSquareConnected = false;
+                    }
+
+                    if(!IsLinkedInConnected && !IsFourSquareConnected)
+                    {
+                        await _pageDialogService.DisplayAlertAsync("Message", "Please connect with any network first", "Ok");
+                        return ;
+                    }
+
+                    var paras = new DialogParameters
+                    {
+                        {"IsLinkedInChecked", IsLinkedInConnected },
+                        {"IsFourSquareChecked", IsFourSquareConnected }
+                    };
+
+                    _dialogService.ShowDialog("PostDialog", paras, CloseDialog);
+                }
+               
+               
+            }
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
             }
 
-            var paras = new DialogParameters
-            {
-                {"IsLinkedInChecked", IsLinkedInConnected },
-                {"IsFourSquareChecked", IsFourSquareConnected }
-            };
-
-            _dialogService.ShowDialog("PostDialog", paras, CloseDialog);
         }
+
+
 
         public static void CloseDialog(IDialogResult dialogResult)
         {
@@ -197,16 +224,16 @@ namespace SocialyUnFriend.ViewModels
                     }
                 };
 
-                if(Application.Current.Properties.ContainsKey(Constants.IsLinkedInConnected) && (bool)Application.Current.Properties[Constants.IsLinkedInConnected])
+                if (Application.Current.Properties.ContainsKey(Constants.IsLinkedInConnected) && (bool)Application.Current.Properties[Constants.IsLinkedInConnected])
                 {
                     var linkedInBtn = items.Where(x => x.Platform == SocialMediaPlatform.LinkedIn).SingleOrDefault();
 
-                    if(linkedInBtn != null)
+                    if (linkedInBtn != null)
                     {
                         linkedInBtn.IsEnabled = false;
                         linkedInBtn.Text = "Connected to Linkedin";
                         linkedInBtn.Color = Color.Gray;
-                    }   
+                    }
                 }
 
                 if (Application.Current.Properties.ContainsKey(Constants.IsFourSquareConnected) && (bool)Application.Current.Properties[Constants.IsFourSquareConnected])
@@ -219,7 +246,7 @@ namespace SocialyUnFriend.ViewModels
                         fourSquareBtn.Color = Color.Gray;
                     }
                 }
-                
+
 
                 Items = new List<ImageButtonItem>(items);
 
@@ -229,6 +256,7 @@ namespace SocialyUnFriend.ViewModels
 
             }
         }
+
         #endregion
     }
 }

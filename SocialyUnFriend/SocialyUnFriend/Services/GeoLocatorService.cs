@@ -1,4 +1,6 @@
-﻿using Prism.Services;
+﻿using Plugin.Permissions;
+using Prism.Services;
+using SocialyUnFriend.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,25 +27,35 @@ namespace SocialyUnFriend.Services
 
             try
             {
-                var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(15));
-               
-                var location = await Geolocation.GetLocationAsync(request);
+                var status = await Utils.CheckPermissions<LocationPermission>();
 
-                if (location != null)
+                if (status == Plugin.Permissions.Abstractions.PermissionStatus.Granted)
                 {
-                    Latitude = location.Latitude;
-                    Longitude = location.Longitude;
+                    var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(15));
+
+                    var location = await Geolocation.GetLocationAsync(request);
+
+                    if (location != null)
+                    {
+                        Latitude = location.Latitude;
+                        Longitude = location.Longitude;
+                    }
                 }
             }
             catch (FeatureNotSupportedException fnsEx)
             {
                 // Handle not supported on device exception
-               await  _pageDialogService.DisplayAlertAsync("Not Supported", "This feature is not supported on this device","Ok");
+                await _pageDialogService.DisplayAlertAsync("Not Supported", "This feature is not supported on this device", "Ok");
             }
             catch (FeatureNotEnabledException fneEx)
             {
                 // Handle not enabled on device exception
-                await _pageDialogService.DisplayAlertAsync("Attention", "Please enable the device GPS", "Ok");
+
+                var isProceed = await _pageDialogService.DisplayAlertAsync("Attention", "Please enable the device GPS", "Proceed", "Maybe Later");
+
+                if (isProceed)
+                    CrossPermissions.Current.OpenAppSettings();
+
 
             }
             catch (PermissionException pEx)

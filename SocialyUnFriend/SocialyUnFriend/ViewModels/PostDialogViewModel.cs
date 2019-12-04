@@ -235,8 +235,6 @@ namespace SocialyUnFriend.ViewModels
                     await _pageDialogService.DisplayAlertAsync("Denied!", "Camera Permission is required", "OK");
                 }
 
-
-
             }
             catch (Exception)
             {
