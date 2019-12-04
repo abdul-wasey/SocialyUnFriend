@@ -12,6 +12,8 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using SocialyUnFriend.Common;
+using SocialyUnFriend.ViewModels;
+using SocialyUnFriend.CustomDialogs;
 
 namespace SocialyUnFriend
 {
@@ -25,23 +27,30 @@ namespace SocialyUnFriend
 
         protected override async void OnInitialized()
         {
+           
             AppCenter.Start(string.Format("ios={0};android={1};uwp={2}",Constants.AppSecretiOS,Constants.AppSecretAndroid,Constants.AppSecretUWP), 
                             typeof(Analytics), typeof(Crashes));
 
             InitializeComponent();
 
 
-            if (Current.Properties.ContainsKey("acces_token") && (string)Current.Properties["acces_token"] != null)
-                await NavigationService.NavigateAsync("NavigationPage/UserProfilePage");
+            if (Current.Properties.ContainsKey(Constants.IsWelcomePageVisible) && (bool)Current.Properties[Constants.IsWelcomePageVisible])
+                await NavigationService.NavigateAsync("NavigationPage/LoginPage");
             else
-                //MainPage = new NavigationPage(new LoginPage());
                 await NavigationService.NavigateAsync("NavigationPage/WelcomePage");
+
+               
+         
 
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
+
+            //Regiter for dialogs
+
+            containerRegistry.RegisterDialog<PostDialog, PostDialogViewModel>();
 
             // Register Services,,
            

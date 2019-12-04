@@ -14,6 +14,8 @@ namespace SocialyUnFriend.Common
 
         #region LinkedIn Ceredentials
 
+        public const string LinkedInPermittedServicesUrl = "https://www.linkedin.com/psettings/permitted-services";
+
         public const string LinkedInProfileUrl = "https://api.linkedin.com/v2/me?projection=(id,localizedFirstName,localizedLastName,profilePicture(displayImage~:playableStreams))";
 
         public const string LinkedInPostShareUrl = "https://api.linkedin.com/v2/shares";
@@ -41,6 +43,10 @@ namespace SocialyUnFriend.Common
         public const string FSRedirectLink = "https://developer.foursquare.com/docs/announcements";
 
         public const string FSAuthorizeURL = "https://foursquare.com/oauth2/authenticate";
+
+
+        public const string FSConnectedAppsURL = "https://foursquare.com/settings/connections"; 
+
         public const string FSAccessTokenURL = "https://foursquare.com/oauth2/access_token";
 
         public const string FSUserProfileURL = "https://api.foursquare.com/v2/users/self";
@@ -68,6 +74,7 @@ namespace SocialyUnFriend.Common
 
         #region Persistance Data's Keys
 
+        public const string IsWelcomePageVisible = "WelcomePageVisible";
         public const string IsAccessTokenAvailable = "IsAccessTokenAvailable";
         public const string AccessTokenLinkedin = "AccessTokenLinkedin";
         public const string AccessTokenLinkedinExpiryDate = "AccessTokenLinkedinExpiryDate";

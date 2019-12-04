@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="SocialyUnFriend.CustomDialogs.PostDialog"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:cacheImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:customRenderer="clr-namespace:SocialyUnFriend.CustomRenderers"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             BackgroundColor="White"
+             Padding="0"
+             Margin="10,0,10,0"
+             HorizontalOptions="FillAndExpand">
+
+    <Grid>
+    <Grid RowSpacing="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackLayout Orientation="Horizontal"
+                     BackgroundColor="#303F9F"
+                     HeightRequest="40"
+                     Padding="10,0,0,0"
+                     Spacing="0">
+                <Label Text="Linkedin" 
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                <CheckBox BackgroundColor="Transparent" 
+                              Color="White" 
+                              IsChecked="{Binding IsLinkedInChecked, Mode=TwoWay}"/>
+                <Label Text="Foursquare" 
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                <CheckBox 
+                              Color="White" 
+                              IsChecked="{Binding IsFourSquareChecked, Mode=TwoWay}"/>
+            </StackLayout>
+
+            <StackLayout Grid.Row="1"
+                     Orientation="Horizontal" 
+                     Spacing="0"
+                     HeightRequest="40"
+                     BackgroundColor="DodgerBlue">
+                <Label Text="Share Your Post" 
+                               TextColor="White"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="Center" 
+                               Margin="8,0,0,0"    
+                               FontSize="16"  
+                               FontAttributes="Bold"    />
+
+                <Button Text="POST" 
+                                HorizontalOptions="End" 
+                                BorderWidth="0"
+                                Command="{Binding PostCommand}"       
+                                      />
+
+            </StackLayout>
+
+            <customRenderer:ExtendedEditorControl  Grid.Row="2"
+                        Placeholder="What do you want to talk about?"
+                        IsExpandable="True"
+                        HeightRequest="100"
+                        HasRoundedCorner="False"                              
+                        PlaceholderColor="LightGray"
+                        TextColor="Black" 
+                        Text="{Binding Content}"    
+                        VerticalOptions="FillAndExpand"
+                       />
+
+            <cacheImage:CachedImage Grid.Row="3" 
+                                Source="{Binding Image}" 
+                                Aspect="AspectFill" 
+                                LoadingPlaceholder="loading.png" 
+                                HeightRequest="100"/>
+
+            <Grid  Grid.Row="4" ColumnSpacing="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="5*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Text="Upload Picture" 
+                        BackgroundColor="DodgerBlue"
+                        TextColor="White"
+                        Command="{Binding OpenCameraCommand}"
+                          />
+
+                <Button Text="Cancel" Grid.Column="1" 
+                        BackgroundColor="Red"
+                        TextColor="White"
+                        Command="{Binding CloseCommand}"
+                         />
+            </Grid>
+
+        </Grid>
+
+    <Frame       IsVisible="{Binding IsRunning}"
+                         VerticalOptions="CenterAndExpand"
+                         HorizontalOptions="FillAndExpand"
+                         BackgroundColor="#5B5B5B"
+                         Padding="0"
+                         Margin="30,0,30,0"
+                         BorderColor="WhiteSmoke"
+                         CornerRadius="6"
+                         HasShadow="True">
+
+        <StackLayout Spacing="0">
+            <ActivityIndicator 
+                        Margin="0,8,0,0"
+                        IsRunning="{Binding IsRunning}"
+                                       />
+            <Label Text="{Binding LoaderText, Mode=TwoWay}"
+                           TextColor="White" 
+                           FontSize="12"
+                           FontAttributes="Italic"
+                           Margin="0,0,0,5"
+                           HorizontalOptions="CenterAndExpand"/>
+        </StackLayout>
+        
+    </Frame>
+
+    </Grid>
+    
+</StackLayout>
+
+
+
+
+

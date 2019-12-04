@@ -115,10 +115,35 @@ namespace SocialyUnFriend.ViewModels
                             await _pageDialogService.DisplayAlertAsync("Error Message", tokenResponse.ErrorMessage, "Ok");
 
 
-                        await _navigationService.NavigateAsync("/NavigationPage/LoginPage");
+                        await _navigationService.GoBackAsync();
                     });
                 }
 
+                if(uri.Query.Contains("successAlert"))
+                {
+                    Application.Current.Properties[Constants.IsLinkedInConnected] = false;
+                    Application.Current.Properties.Remove(Constants.AccessTokenLinkedin);
+                    await Application.Current.SavePropertiesAsync();
+
+                    await _navigationService.GoBackAsync();
+                }
+
+                if(uri.AbsolutePath.ToLower().Contains("connections"))
+                {
+                    Application.Current.Properties[Constants.IsFourSquareConnected] = false;
+                    Application.Current.Properties.Remove(Constants.AccessTokenFourSquare);
+                    await Application.Current.SavePropertiesAsync();
+
+                    await _navigationService.GoBackAsync();
+                }
+
+                if((bool)Application.Current.Properties[Constants.IsLinkedInConnected] == false 
+                   && (bool)Application.Current.Properties[Constants.IsFourSquareConnected] == false)
+                {
+                    Application.Current.Properties[Constants.IsAccessTokenAvailable] = false;
+                    await Application.Current.SavePropertiesAsync();
+                }
+               
             }
             catch (Exception)
             {

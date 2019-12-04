@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using PropertyChanged;
 using Prism.Navigation;
+using Xamarin.Forms;
+using SocialyUnFriend.Common;
 
 namespace SocialyUnFriend.ViewModels
 {
@@ -28,13 +30,18 @@ namespace SocialyUnFriend.ViewModels
         [DoNotNotify]
         public ObservableCollection<WelcomeModel> WelcomePages { get; set; }
 
-        public void GetStartedCommandExecuted()
+        public async void GetStartedCommandExecuted()
         {
-            _navigationService.NavigateAsync("/NavigationPage/LoginPage");  //reseting the navigation stack
+
+            await _navigationService.NavigateAsync("/NavigationPage/LoginPage");  //reseting the navigation stack
+
+            Application.Current.Properties[Constants.IsWelcomePageVisible] = true;
+            await Application.Current.SavePropertiesAsync();
         }
 
         private List<WelcomeModel> GetListOfViews()
         {
+
             return new List<WelcomeModel>
             {
                  new WelcomeModel

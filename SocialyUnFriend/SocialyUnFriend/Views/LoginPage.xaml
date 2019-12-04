@@ -18,15 +18,13 @@
             <Grid Padding="10" RowSpacing="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="150"/>
-                    <RowDefinition Height="4*"/>
-                    <RowDefinition Height="0.5*"/>
-                    <RowDefinition Height="5.5*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <cacheImage:CachedImage 
-                  Grid.Row="0"
-                  Source="logo.png"
-                  Aspect="AspectFit"  
+                <cacheImage:CachedImage Grid.Row="0"
+                                        Source="logo.png" 
+                                        Aspect="AspectFit"  
                     />
 
                 <ListView   Grid.Row="1"
@@ -82,95 +80,10 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <StackLayout Orientation="Horizontal"
-                             Grid.Row="2">
-                    <Label Text="Linkedin" 
-                           TextColor="White"
-                           VerticalOptions="Center"/>
-                    <CheckBox BackgroundColor="Transparent" 
-                              Color="White" 
-                              IsChecked="{Binding IsLinkedInChecked}"/>
-                    <Label Text="FourSquare" 
-                           TextColor="White"
-                           VerticalOptions="Center"/>
-                    <CheckBox 
-                              Color="White" 
-                              IsChecked="{Binding IsFourSquareChecked}"/>
-                </StackLayout>
-
-                <Frame 
-               
-                  Grid.Row="3"
-                  Margin="0,4,0,0"
-               BackgroundColor="white" 
-               Padding="0"
-               HasShadow="False">
-
-                    <Grid RowSpacing="0">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1.7*" />
-                            <RowDefinition Height="4*" />
-                            <RowDefinition Height="4*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <Frame Padding="0"
-                               HasShadow="False"
-                               Grid.Row="0"
-                               HorizontalOptions="FillAndExpand"
-                               BackgroundColor="DodgerBlue"
-                               CornerRadius="0">
-
-                            <StackLayout Orientation="Horizontal" 
-                                         Spacing="0">
-                                <Label Text="Share Your Post" 
-                               TextColor="White"
-                               HorizontalOptions="StartAndExpand"
-                               VerticalOptions="Center" 
-                               Margin="8,0,0,0"    
-                               FontSize="16"  
-                               FontAttributes="Bold"    />
-
-                                <Button Text="POST" 
-                                HorizontalOptions="End" 
-                                BorderWidth="0"
-                                Command="{Binding PostCommand}"       
-                                      />
-
-                            </StackLayout>
-
-                        </Frame>
-
-                        <customRenderer:ExtendedEditorControl
-                        Placeholder="What do you want to talk about?"
-                        IsExpandable="True"
-                        HasRoundedCorner="False"                              
-                        PlaceholderColor="LightGray"
-                        TextColor="Black" 
-                        Text="{Binding Content}"    
-                        VerticalOptions="FillAndExpand"
-                        Grid.Row="1"/>
-
-                        <cacheImage:CachedImage Source="{Binding Image}" 
-                                                Aspect="AspectFill" 
-                                                        LoadingPlaceholder="loading.png"
-                                                        Grid.Row="2"        
-                                                        />
-
-                        <Button Text="Upload Picture"
-                        CornerRadius="0"
-                        BackgroundColor="DodgerBlue"
-                        BorderWidth="0"        
-                        TextColor="White"
-                        Command="{Binding OpenCameraCommand}"
-                        Grid.Row="3"
-                               />
-
-                    </Grid>
-
-                </Frame>
-
+                <Button Grid.Row="2"
+                       Text="Share a Post" 
+                       Margin="10" 
+                       Command="{Binding OpenDialogCommand}" />
             </Grid>
 
             <Frame       IsVisible="{Binding IsRunning}"
@@ -185,12 +98,12 @@
 
                 <StackLayout Spacing="0">
                     <ActivityIndicator 
-                        Margin="0,5,0,0"
+                        Margin="0,8,0,0"
                         IsRunning="{Binding IsRunning}"
                                        />
                     <Label Text="{Binding LoaderText, Mode=TwoWay}"
                            TextColor="White" 
-                           FontSize="Medium"
+                           FontSize="12"
                            FontAttributes="Italic"
                            Margin="0,0,0,5"
                            HorizontalOptions="CenterAndExpand"/>
