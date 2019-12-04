@@ -14,21 +14,27 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Plugin.CurrentActivity;
 using CarouselView.FormsPlugin.Android;
+using SocialyUnFriend.DependencyServcices;
+using SocialyUnFriend.Droid.Services;
 
 namespace SocialyUnFriend.Droid
 {
     [Activity(Label = "SocialPost", Icon = "@drawable/icon", Theme = "@style/Theme.Splash", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        public static Activity Instance;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
 
+
             SetTheme(Resource.Style.MainTheme);
              
             base.OnCreate(savedInstanceState);
+
+            Instance = this;
 
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
@@ -55,7 +61,7 @@ namespace SocialyUnFriend.Droid
             {
                 //do the platform specific registrations here..
 
-             
+                containerRegistry.Register<ILocationSettings, LocationSettings>();
             }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

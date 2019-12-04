@@ -12,6 +12,7 @@ using Prism.Services;
 using Prism.Services.Dialogs;
 using PropertyChanged;
 using SocialyUnFriend.Common;
+using SocialyUnFriend.DependencyServcices;
 using SocialyUnFriend.Model;
 using SocialyUnFriend.NetworkController;
 using SocialyUnFriend.Services;
@@ -33,10 +34,12 @@ namespace SocialyUnFriend.ViewModels
         private readonly IFourSquareService _fourSquareService;
         private readonly IHttpClientController _httpClientController;
         private readonly IGeoLocatorService _geoLocatorService;
+        private readonly ILocationSettings _locationSettings;
 
         public PostDialogViewModel(IConnectivity connectivity, IPageDialogService pageDialogService,
                                    ILinkedInService linkedInService, IFourSquareService fourSquareService,
-                                   IHttpClientController httpClientController, IGeoLocatorService geoLocatorService)
+                                   IHttpClientController httpClientController, IGeoLocatorService geoLocatorService,
+                                   ILocationSettings locationSettings)
         {
             
             _connectivity = connectivity;
@@ -45,7 +48,10 @@ namespace SocialyUnFriend.ViewModels
             _fourSquareService = fourSquareService;
             _httpClientController = httpClientController;
             _geoLocatorService = geoLocatorService;
-        
+            _locationSettings = locationSettings;
+
+
+
             CloseCommand = new DelegateCommand(() => RequestClose(null));
             PostCommand = new DelegateCommand(OnPostCommandExecuted);
             OpenCameraCommand = new DelegateCommand(OpenCameraCommandExecuted);
@@ -131,7 +137,56 @@ namespace SocialyUnFriend.ViewModels
                     return;
                 }
 
+
+
                 IsRunning = true;
+
+
+                var fourSquareToken = "";
+                if (Application.Current.Properties.ContainsKey(Constants.AccessTokenFourSquare))
+                    fourSquareToken = Application.Current.Properties[Constants.AccessTokenFourSquare].ToString();
+
+                if (IsFourSquareChecked && !string.IsNullOrEmpty(fourSquareToken))
+                {
+                    if(!_geoLocatorService.IsGpsEnabled())
+                    {
+                       var acceptButton = await _pageDialogService.DisplayAlertAsync("Message", "You can't proceed without turn on GPS", "Proceed","Maybe Later");
+                        if(acceptButton)
+                            _locationSettings.OpenSettings();
+
+                        return;
+                    }
+
+                    LoaderText = "Posting on FourSquare...";
+
+                    string venueId = await CurrentCheckin(fourSquareToken);
+
+                    if (!string.IsNullOrEmpty(venueId))
+                    {
+                        if (!string.IsNullOrEmpty(Image))
+                        {
+                            ApiResponse<object> response = null;
+
+                            response = await _fourSquareService.AddPhoto(Constants.FSAddPhotoURL, fourSquareToken, venueId,
+                                                                         ImageHelper.UriPathToBytes(Image), Content,
+                                                                         DateTime.Now.ToString("yyyyMMdd"));
+                            if (response.IsSuccess)
+                            {
+                                await _pageDialogService.DisplayAlertAsync("Message!", "Photos Uploaded at your connected accounts.", "Ok");
+                            }
+                            else
+                            {
+                                await _pageDialogService.DisplayAlertAsync("Success", "Post Shared Successfully.", "Ok");
+                            }
+                        }
+                    }
+
+                }
+                else if(IsFourSquareChecked && string.IsNullOrEmpty(fourSquareToken))
+                {
+                    await _pageDialogService.DisplayAlertAsync("Message", "You are not connected to Foursquare", "Ok");
+                }
+               
 
                 var linkedInToken = "";
 
@@ -159,42 +214,15 @@ namespace SocialyUnFriend.ViewModels
                     }
 
                 }
-
-                var fourSquareToken = "";
-                if (Application.Current.Properties.ContainsKey(Constants.AccessTokenFourSquare))
-                    fourSquareToken = Application.Current.Properties[Constants.AccessTokenFourSquare].ToString();
-
-                if (IsFourSquareChecked && !string.IsNullOrEmpty(fourSquareToken))
+                else if (IsLinkedInChecked && string.IsNullOrEmpty(linkedInToken))
                 {
-                    LoaderText = "Posting on FourSquare...";
-
-                    string venueId = await CurrentCheckin(fourSquareToken);
-
-                    if (!string.IsNullOrEmpty(venueId))
-                    {
-                        if (!string.IsNullOrEmpty(Image))
-                        {
-                            ApiResponse<object> response = null;
-
-                            response = await _fourSquareService.AddPhoto(Constants.FSAddPhotoURL, fourSquareToken, venueId,
-                                                                         ImageHelper.UriPathToBytes(Image), Content,
-                                                                         DateTime.Now.ToString("yyyyMMdd"));
-                            if (response.IsSuccess)
-                            {
-                                await _pageDialogService.DisplayAlertAsync("Message!", "Photos Upload at your connected accounts.", "Ok");
-                            }
-                            else
-                            {
-                                await _pageDialogService.DisplayAlertAsync("Error!", "Something Went wrong, please try again later", "Ok");
-                            }
-                        }
-                    }
-
+                    await _pageDialogService.DisplayAlertAsync("Message", "You are not connected to Linkedin", "Ok");
                 }
+
 
                 if (!IsFourSquareChecked && !IsLinkedInChecked)
                 {
-                    await _pageDialogService.DisplayAlertAsync("Message!", "Please Check Desired Platform to Proceed.", "Ok");
+                    await _pageDialogService.DisplayAlertAsync("Message!", "Please Check desired Platform to Proceed.", "Ok");
                     return;
                 }
 
@@ -211,7 +239,6 @@ namespace SocialyUnFriend.ViewModels
             finally
             {
                 IsRunning = false;
-
             }
 
         }

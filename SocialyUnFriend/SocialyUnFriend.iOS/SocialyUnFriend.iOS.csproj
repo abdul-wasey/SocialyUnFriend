@@ -135,6 +135,9 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>5.0.0-beta</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugin.Geolocator">
+      <Version>4.6.2-beta</Version>
+    </PackageReference>
     <PackageReference Include="Xam.Plugin.Media">
       <Version>4.4.8-beta</Version>
     </PackageReference>

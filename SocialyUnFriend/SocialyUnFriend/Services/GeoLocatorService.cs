@@ -1,4 +1,5 @@
-﻿using Plugin.Permissions;
+﻿using Plugin.Geolocator;
+using Plugin.Permissions;
 using Prism.Services;
 using SocialyUnFriend.Common;
 using System;
@@ -51,11 +52,7 @@ namespace SocialyUnFriend.Services
             {
                 // Handle not enabled on device exception
 
-                var isProceed = await _pageDialogService.DisplayAlertAsync("Attention", "Please enable the device GPS", "Proceed", "Maybe Later");
-
-                if (isProceed)
-                    CrossPermissions.Current.OpenAppSettings();
-
+               await _pageDialogService.DisplayAlertAsync("Attention", "Please enable the device GPS", "Ok");
 
             }
             catch (PermissionException pEx)
@@ -71,6 +68,11 @@ namespace SocialyUnFriend.Services
                 await _pageDialogService.DisplayAlertAsync("Error", "Unable to get location, please try later", "Ok");
 
             }
+        }
+
+        public bool IsGpsEnabled()
+        {
+            return CrossGeolocator.Current.IsGeolocationEnabled;
         }
     }
 }

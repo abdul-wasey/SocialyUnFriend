@@ -12,5 +12,7 @@ namespace SocialyUnFriend.Services
         double Longitude { get; set; }
 
         Task GetLocationAsync();
+
+        bool IsGpsEnabled();
     }
 }

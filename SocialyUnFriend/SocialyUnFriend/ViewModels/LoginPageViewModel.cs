@@ -103,24 +103,25 @@ namespace SocialyUnFriend.ViewModels
                 var storagePermissionStatus = await Utils.CheckPermissions<StoragePermission>();
                 var locationPermissionStatus = await Utils.CheckPermissions<LocationPermission>();
                 
-                if (locationPermissionStatus == PermissionStatus.Granted && photosPermissionStatus == PermissionStatus.Granted
-                    && storagePermissionStatus == PermissionStatus.Granted)
+                if (photosPermissionStatus == PermissionStatus.Granted)
                 {
-                    if (Application.Current.Properties.ContainsKey(Constants.IsLinkedInConnected) ||
-                        Application.Current.Properties.ContainsKey(Constants.IsFourSquareConnected))
+                    if (Application.Current.Properties.ContainsKey(Constants.IsLinkedInConnected))
                     {
                         if ((bool)Application.Current.Properties[Constants.IsLinkedInConnected])
                             IsLinkedInConnected = true;
                         else
                             IsLinkedInConnected = false;
-
+                    }
+                    if (Application.Current.Properties.ContainsKey(Constants.IsFourSquareConnected))
+                    {
                         if ((bool)Application.Current.Properties[Constants.IsFourSquareConnected])
                             IsFourSquareConnected = true;
                         else
                             IsFourSquareConnected = false;
+
                     }
 
-                    if(!IsLinkedInConnected && !IsFourSquareConnected)
+                    if (!IsLinkedInConnected && !IsFourSquareConnected)
                     {
                         await _pageDialogService.DisplayAlertAsync("Message", "Please connect with any network first", "Ok");
                         return ;
