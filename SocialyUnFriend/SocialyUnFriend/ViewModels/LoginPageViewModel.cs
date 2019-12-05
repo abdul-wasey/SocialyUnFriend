@@ -99,11 +99,12 @@ namespace SocialyUnFriend.ViewModels
             // Required Permissions ,, 
             try
             {
+
                 var photosPermissionStatus = await Utils.CheckPermissions<PhotosPermission>(Permission.Photos);
                 var storagePermissionStatus = await Utils.CheckPermissions<StoragePermission>(Permission.Storage);
                 var locationPermissionStatus = await Utils.CheckPermissions<LocationPermission>(Permission.Location);
-                
-                if (photosPermissionStatus == PermissionStatus.Granted)
+
+                if (locationPermissionStatus == PermissionStatus.Granted)
                 {
                     if (Application.Current.Properties.ContainsKey(Constants.IsLinkedInConnected))
                     {
@@ -124,7 +125,7 @@ namespace SocialyUnFriend.ViewModels
                     if (!IsLinkedInConnected && !IsFourSquareConnected)
                     {
                         await _pageDialogService.DisplayAlertAsync("Message", "Please connect with any network first", "Ok");
-                        return ;
+                        return;
                     }
 
                     var paras = new DialogParameters
@@ -135,8 +136,10 @@ namespace SocialyUnFriend.ViewModels
 
                     _dialogService.ShowDialog("PostDialog", paras, CloseDialog);
                 }
-               
-               
+                else
+                {
+                    await _pageDialogService.DisplayAlertAsync("Message", "You can not proceed without allowing permissions", "Ok");
+                }
             }
             catch (Exception ex)
             {
