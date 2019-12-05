@@ -99,9 +99,9 @@ namespace SocialyUnFriend.ViewModels
             // Required Permissions ,, 
             try
             {
-                var photosPermissionStatus = await Utils.CheckPermissions<PhotosPermission>();
-                var storagePermissionStatus = await Utils.CheckPermissions<StoragePermission>();
-                var locationPermissionStatus = await Utils.CheckPermissions<LocationPermission>();
+                var photosPermissionStatus = await Utils.CheckPermissions<PhotosPermission>(Permission.Photos);
+                var storagePermissionStatus = await Utils.CheckPermissions<StoragePermission>(Permission.Storage);
+                var locationPermissionStatus = await Utils.CheckPermissions<LocationPermission>(Permission.Location);
                 
                 if (photosPermissionStatus == PermissionStatus.Granted)
                 {
@@ -144,8 +144,6 @@ namespace SocialyUnFriend.ViewModels
             }
 
         }
-
-
 
         public static void CloseDialog(IDialogResult dialogResult)
         {

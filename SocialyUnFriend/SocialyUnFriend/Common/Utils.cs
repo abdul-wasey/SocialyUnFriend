@@ -10,7 +10,7 @@ namespace SocialyUnFriend.Common
 {
     public static class Utils
     {
-        public static async Task<PermissionStatus> CheckPermissions<T>() where T : BasePermission, new()
+        public static async Task<PermissionStatus> CheckPermissions<T>(Permission permission) where T : BasePermission, new()
         {
             var permissionStatus = await CrossPermissions.Current.CheckPermissionStatusAsync<T>();
             bool request = false;
@@ -19,8 +19,8 @@ namespace SocialyUnFriend.Common
                 if (Device.RuntimePlatform == Device.iOS)
                 {
 
-                    var title = $"{nameof(T)} Permission";
-                    var question = $"To use this App the {nameof(T)} permission is required.";
+                    var title = $"{permission} Permission";
+                    var question = $"To use this App the {permission} permission is required.";
                     var positive = "Settings";
                     var negative = "Maybe Later";
                     var task = Application.Current?.MainPage?.DisplayAlert(title, question, positive, negative);
@@ -42,25 +42,34 @@ namespace SocialyUnFriend.Common
 
             if (request || permissionStatus != PermissionStatus.Granted)
             {
-                var newStatus = await CrossPermissions.Current.RequestPermissionAsync<T>();
+                var shouldShow = await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(permission);
 
-                if (newStatus != PermissionStatus.Granted)
+                if (shouldShow)
                 {
-                    permissionStatus = newStatus;
-                    var title = $"{nameof(T)} Permission";
-                    var question = $"To use this App the {nameof(T)} permission is required.";
-                    var positive = "Settings";
-                    var negative = "Maybe Later";
-                    var task = Application.Current?.MainPage?.DisplayAlert(title, question, positive, negative);
-                    if (task == null)
-                        return permissionStatus;
+                    var newStatus = await CrossPermissions.Current.RequestPermissionAsync<T>();
 
-                    var result = await task;
-                    if (result)
+                    permissionStatus = newStatus;
+                }
+                else
+                {
+                    if (permissionStatus != PermissionStatus.Granted)
                     {
-                        CrossPermissions.Current.OpenAppSettings();
+                        var title = $"{permission} Permission";
+                        var question = $"To use this App the {permission} permission is required.";
+                        var positive = "Settings";
+                        var negative = "Maybe Later";
+                        var task = Application.Current?.MainPage?.DisplayAlert(title, question, positive, negative);
+                        if (task == null)
+                            return permissionStatus;
+
+                        var result = await task;
+                        if (result)
+                        {
+                            CrossPermissions.Current.OpenAppSettings();
+                        }
+
                     }
-                    return permissionStatus;
+
                 }
             }
 

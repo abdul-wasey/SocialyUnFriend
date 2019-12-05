@@ -28,7 +28,7 @@ namespace SocialyUnFriend.Services
 
             try
             {
-                var status = await Utils.CheckPermissions<LocationPermission>();
+                var status = await Utils.CheckPermissions<LocationPermission>(Plugin.Permissions.Abstractions.Permission.Location);
 
                 if (status == Plugin.Permissions.Abstractions.PermissionStatus.Granted)
                 {
