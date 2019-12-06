@@ -13,6 +13,7 @@ using Prism.Services.Dialogs;
 using PropertyChanged;
 using SocialyUnFriend.Common;
 using SocialyUnFriend.DependencyServcices;
+using SocialyUnFriend.LocalDB;
 using SocialyUnFriend.Model;
 using SocialyUnFriend.NetworkController;
 using SocialyUnFriend.Services;
@@ -35,11 +36,13 @@ namespace SocialyUnFriend.ViewModels
         private readonly IHttpClientController _httpClientController;
         private readonly IGeoLocatorService _geoLocatorService;
         private readonly ILocationSettings _locationSettings;
+        private readonly ISqliteDb _sqliteDb;
 
         public PostDialogViewModel(IConnectivity connectivity, IPageDialogService pageDialogService,
                                    ILinkedInService linkedInService, IFourSquareService fourSquareService,
                                    IHttpClientController httpClientController, IGeoLocatorService geoLocatorService,
-                                   ILocationSettings locationSettings)
+                                   ILocationSettings locationSettings, ISqliteDb sqliteDb)
+                                   
         {
             
             _connectivity = connectivity;
@@ -49,8 +52,7 @@ namespace SocialyUnFriend.ViewModels
             _httpClientController = httpClientController;
             _geoLocatorService = geoLocatorService;
             _locationSettings = locationSettings;
-
-
+            _sqliteDb = sqliteDb;
 
             CloseCommand = new DelegateCommand(() => RequestClose(null));
             PostCommand = new DelegateCommand(OnPostCommandExecuted);
@@ -172,11 +174,20 @@ namespace SocialyUnFriend.ViewModels
                                                                          DateTime.Now.ToString("yyyyMMdd"));
                             if (response.IsSuccess)
                             {
-                                await _pageDialogService.DisplayAlertAsync("Message!", "Photos Uploaded at your connected accounts.", "Ok");
+                                var recentPostModel = new RecentPost
+                                {
+                                    Text = Content,
+                                    ImageUri = Image,
+                                    Platform = SocialMediaPlatform.FourSquare.ToString(),
+                                    DateTime = DateTime.Now
+                                };
+                                
+                                await _sqliteDb.SaveAsync(recentPostModel);
+                                
                             }
                             else
                             {
-                                await _pageDialogService.DisplayAlertAsync("Success", "Post Shared Successfully.", "Ok");
+                                await _pageDialogService.DisplayAlertAsync("Error", response.ErrorMessage, "Ok");
                             }
                         }
                     }
@@ -206,7 +217,15 @@ namespace SocialyUnFriend.ViewModels
 
                     if (postResponse.IsSuccess)
                     {
-                        //await _pageDialogService.DisplayAlertAsync("Post Created", "You just create a post on linked-in.", "Ok");
+                        var recentPostModel = new RecentPost
+                        {
+                            Text = Content,
+                            ImageUri = Image,
+                            Platform = $"Posted on {SocialMediaPlatform.LinkedIn}",
+                            DateTime = DateTime.Now
+                        };
+
+                        await _sqliteDb.SaveAsync(recentPostModel);
                     }
                     else
                     {

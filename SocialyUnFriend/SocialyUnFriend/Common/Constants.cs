@@ -45,7 +45,7 @@ namespace SocialyUnFriend.Common
         public const string FSAuthorizeURL = "https://foursquare.com/oauth2/authenticate";
 
 
-        public const string FSConnectedAppsURL = "https://foursquare.com/settings/connections"; 
+        public const string FSConnectedAppsURL = "https://foursquare.com/settings/connections";
 
         public const string FSAccessTokenURL = "https://foursquare.com/oauth2/access_token";
 
@@ -59,7 +59,12 @@ namespace SocialyUnFriend.Common
 
         #endregion
 
-        public static string dbPath = Path.Combine(FileSystem.AppDataDirectory, "FourSquare.db");
+
+        /// <summary>
+        /// Both iOS and Android have a specific/unique file directory for each app, and this is where we'll store the .db3 database file. 
+        /// We can easily locate it using Xamarin.Essentials.FileSystem.
+        /// </summary>
+        public static string dbPath = Path.Combine(FileSystem.AppDataDirectory, $"{nameof(SocialyUnFriend)}.db3");
 
 
         #region AppCenter Credentials

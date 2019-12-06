@@ -7,7 +7,6 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:cacheImage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:customRenderer="clr-namespace:SocialyUnFriend.CustomRenderers"
              mc:Ignorable="d"
              x:Class="SocialyUnFriend.Views.LoginPage"
              NavigationPage.HasNavigationBar="False"
@@ -19,6 +18,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="150"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -81,6 +81,11 @@
                 </ListView>
 
                 <Button Grid.Row="2"
+                       Text="Recent Posts" 
+                       Margin="10"
+                       BackgroundColor="DodgerBlue" 
+                       Command="{Binding RecentPostsCommand}" />
+                <Button Grid.Row="3"
                        Text="Share a Post" 
                        Margin="10" 
                        Command="{Binding OpenDialogCommand}" />

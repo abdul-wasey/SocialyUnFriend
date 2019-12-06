@@ -52,7 +52,7 @@ namespace SocialyUnFriend
 
             containerRegistry.RegisterDialog<PostDialog, PostDialogViewModel>();
 
-            // Register Services,,
+            // Register NetWerk Services,,
            
             containerRegistry.RegisterSingleton<IHttpClientController, HttpClientController>();
 
@@ -60,13 +60,18 @@ namespace SocialyUnFriend
             containerRegistry.Register<IFourSquareService, FourSquareService>();
             containerRegistry.Register<IGeoLocatorService, GeoLocatorService>();
 
-            containerRegistry.Register<IVenuesRepository, VenuesRepository>();
+          
 
             //Register Xamarin.Essentials Interfaces for DI,
 
             containerRegistry.Register<IConnectivity,ConnectivityImplementation>();
 
+            //register database services,
             containerRegistry.RegisterSingleton(typeof(DatabaseContext));
+            containerRegistry.Register<IVenuesRepository, VenuesRepository>();
+
+
+            containerRegistry.RegisterSingleton<ISqliteDb, SqliteDb>();
         }
     }
 }

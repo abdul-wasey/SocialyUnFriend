@@ -2,8 +2,6 @@
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -17,13 +15,14 @@ namespace SocialyUnFriend.Common
             {
                 var permissionStatus = await CrossPermissions.Current.CheckPermissionStatusAsync<T>();
                 bool request = false;
+
                 if (permissionStatus == PermissionStatus.Denied)
                 {
                     if (Device.RuntimePlatform == Device.iOS)
                     {
 
                         var title = $"{permission} Permission";
-                        var question = $"To use this App the {permission} permission is required.";
+                        var question = $"To use this App {permission} permission is required.";
                         var positive = "Settings";
                         var negative = "Maybe Later";
                         var task = Application.Current?.MainPage?.DisplayAlert(title, question, positive, negative);

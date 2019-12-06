@@ -52,12 +52,16 @@ namespace SocialyUnFriend.ViewModels
 
             NavigationCommand = new DelegateCommand<ImageButtonItem>(OnNavigationCommandExecuted);
             OpenDialogCommand = new DelegateCommand(OpenDialogCommandExecuted);
+            RecentPostsCommand = new DelegateCommand(RecentPostsCommandExecuted);
         }
 
         #region DoNotNotify Properties
 
         [DoNotNotify]
         public DelegateCommand<ImageButtonItem> NavigationCommand { get; }
+
+        [DoNotNotify]
+        public DelegateCommand RecentPostsCommand { get; }
 
         [DoNotNotify]
         public DelegateCommand OpenDialogCommand { get; }
@@ -146,6 +150,11 @@ namespace SocialyUnFriend.ViewModels
                 Crashes.TrackError(ex);
             }
 
+        }
+
+        public async void RecentPostsCommandExecuted()
+        {
+            await _navigationService.NavigateAsync("GetVenuesListPage");
         }
 
         public static void CloseDialog(IDialogResult dialogResult)

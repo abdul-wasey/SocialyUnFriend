@@ -5,69 +5,80 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="SocialyUnFriend.Views.GetVenuesListPage"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              Title="Venues List"
              x:Name="page">
 
-    <Grid BackgroundColor="#1D76A2">
-        
-        <CollectionView ItemsSource="{Binding Venues,Mode=TwoWay}"
-                    SelectionMode="None">
-        
-        
-        <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical"
+    <pancake:PancakeView>
+        <Grid Padding="10,0,10,0">
+
+            <CollectionView ItemsSource="{Binding RecentPosts, Mode=TwoWay}"
+                    SelectionMode="None"
+                    >
+
+
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
                         Span="1" />
-        </CollectionView.ItemsLayout>
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Grid Padding="10" RowSpacing="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        <RowDefinition Height="25" />
-                        </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="8*" />
-                    </Grid.ColumnDefinitions>
-                    <ffimageloading:CachedImage
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10" RowSpacing="8">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="7*" />
+                            </Grid.ColumnDefinitions>
+                            <ffimageloading:CachedImage
                        Grid.RowSpan="3"
-                       Source="{Binding Image,Mode=TwoWay}"
+                       Source="{Binding ImageUri}"
                        Aspect="AspectFill"
                        DownsampleToViewSize="True"
                        ErrorPlaceholder="loading.png" />
-                    
-                    <Label Grid.Column="1"
-                       Text="{Binding name,Mode=TwoWay}"
-                       TextColor="White"    
-                       FontAttributes="Bold"
-                       LineBreakMode="TailTruncation"
+
+                            <Label Grid.Column="1"
+                       Text="{Binding Text}"
+                       TextColor="White" 
+                       FontSize="16"
+                       FontAttributes="None"
+                       MaxLines="3"
+                       LineBreakMode="TailTruncation"            
                         />
-                    <Label Grid.Row="1"
+                            <Label Grid.Row="1"
                        Grid.Column="1"
                        TextColor="White"    
-                       Text="{Binding City,Mode=TwoWay}"
+                       Text="{Binding DateTime, StringFormat='{}{0:MM/dd/yyyy a\\t h:mm tt}'}"
                        LineBreakMode="TailTruncation"
-                       FontAttributes="None"
                        HorizontalOptions="Start"    
-                       VerticalOptions="End" 
+                       VerticalOptions="End"
+                       FontSize="14"            
+                                   
                            />
-                    
-                    <Button Grid.Row="2"
+
+                            <Label Grid.Row="2"
                             Grid.Column="1"
                             HorizontalOptions="End"
                             VerticalOptions="End"
-                            Text="Check In"
-                            Command="{Binding Source={x:Reference page}, Path=BindingContext.CheckInCommand}"
-                            CommandParameter="{Binding id, Mode=TwoWay}"
+                            FontAttributes="Bold"
+                            FontSize="14"       
+                            Text="{Binding Platform}"
+                            TextColor="White"
                             />
 
-                    </Grid>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-        <ActivityIndicator IsRunning="{Binding IsRunning}" />
-    </Grid>
+            <ActivityIndicator IsRunning="{Binding IsRunning}" />
+
+
+        </Grid>
+
+    </pancake:PancakeView>
 
 </ContentPage>
