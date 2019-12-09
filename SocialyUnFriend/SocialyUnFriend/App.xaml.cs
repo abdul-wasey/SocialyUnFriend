@@ -14,6 +14,7 @@ using Microsoft.AppCenter.Crashes;
 using SocialyUnFriend.Common;
 using SocialyUnFriend.ViewModels;
 using SocialyUnFriend.CustomDialogs;
+using XFShimmerLayout.Controls;
 
 namespace SocialyUnFriend
 {
@@ -32,6 +33,9 @@ namespace SocialyUnFriend
                             typeof(Analytics), typeof(Crashes));
 
             InitializeComponent();
+
+            var density = Xamarin.Essentials.DeviceDisplay.MainDisplayInfo.Density;
+            ShimmerLayout.Init(density);
 
 
             if (Current.Properties.ContainsKey(Constants.IsWelcomePageVisible) && (bool)Current.Properties[Constants.IsWelcomePageVisible])

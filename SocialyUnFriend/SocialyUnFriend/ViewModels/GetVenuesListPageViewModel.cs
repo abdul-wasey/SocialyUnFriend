@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace SocialyUnFriend.ViewModels
 {
-   
+
     public class GetVenuesListPageViewModel : BindableBase, INavigatedAware
     {
         private readonly IFourSquareService _fourSquareService;
@@ -40,14 +40,14 @@ namespace SocialyUnFriend.ViewModels
             _geoLocatorService = geoLocatorService;
             _pageDialogService = pageDialogService;
             _navigationService = navigationService;
-           // _connectivity = connectivity;
+            // _connectivity = connectivity;
             _venuesRepository = venuesRepository;
             _sqliteDb = sqliteDb;
 
             //CheckInCommand = new DelegateCommand<string>(CheckInCommandExecuted);
 
             //_connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
-           
+
         }
 
 
@@ -61,7 +61,10 @@ namespace SocialyUnFriend.ViewModels
         public DelegateCommand<string> CheckInCommand { get; }
 
         public ObservableCollection<RecentPost> RecentPosts { get; set; }
+
+
         public bool IsRunning { get; set; }
+        public bool IsBusy { get; set; }
 
 
         //public async void CheckInCommandExecuted(string venueId)
@@ -206,47 +209,101 @@ namespace SocialyUnFriend.ViewModels
 
         private async Task GetRecentPosts()
         {
-                try
+            try
+            {
+               
+                RecentPosts = new ObservableCollection<RecentPost>
                 {
-                    IsRunning = true;
-                    var recentPosts = await _sqliteDb.GetAllDataAsync<RecentPost>().ConfigureAwait(false);
+                    new RecentPost
+                    {
+                         IsBusy = true,
+                         Text = "ashashalsjla",
+                         DateTime = DateTime.Now,
+                         ImageUri = "sasasa",
+                         Platform = SocialMediaPlatform.LinkedIn.ToString()
+                    },
+                    new RecentPost
+                    {
+                         IsBusy = true,
+                         Text = "ashashalsjla",
+                         DateTime = DateTime.Now,
+                         ImageUri = "sasasa",
+                         Platform = SocialMediaPlatform.LinkedIn.ToString()
+                    },
+                    new RecentPost
+                    {
+                         IsBusy = true,
+                         Text = "ashashalsjla",
+                         DateTime = DateTime.Now,
+                         ImageUri = "sasasa",
+                         Platform = SocialMediaPlatform.LinkedIn.ToString()
+                    }
 
-                    if (recentPosts.Count > 0)
-                        RecentPosts = new ObservableCollection<RecentPost>(recentPosts);
-                    else
-                        await _pageDialogService.DisplayAlertAsync("Message", "No record found", "Ok");
+                };
+
+                IsBusy = true;
+
+                await Task.Delay(2500);
+
+                var recentPosts = await _sqliteDb.GetAllDataAsync<RecentPost>();
+
+                if (recentPosts.Count > 0)
+                    RecentPosts = new ObservableCollection<RecentPost>(recentPosts);
+                else
+                {
+                    RecentPosts = new ObservableCollection<RecentPost>
+                {
+                    new RecentPost
+                    {
+                         IsBusy = false,
+                         DateTime = null
+                    },
+                    new RecentPost
+                    {
+                         IsBusy = false,
+                         DateTime = null
+                    },
+                    new RecentPost
+                    {
+                         IsBusy = false,
+                         DateTime = null
+                    }
+
+                };
+                    await _pageDialogService.DisplayAlertAsync("Message", "No record found", "Ok");
                 }
-                catch (Exception ex)
-                {
+            }
+            catch (Exception ex)
+            {
 
-                    var properties = new Dictionary<string, string>
+                var properties = new Dictionary<string, string>
                     {
                         { "Category", "Venues" },
                         { "Offline", "On"}
                     };
 
-                    Crashes.TrackError(ex, properties);
-                }
+                Crashes.TrackError(ex, properties);
+            }
 
-                finally
-                {
-                    IsRunning = false;
-                }
-            
+            finally
+            {
+                IsBusy = false;
+            }
+
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-           
+
         }
 
         public async void OnNavigatedTo(INavigationParameters parameters)
         {
-            await GetRecentPosts().ConfigureAwait(false);
+            await GetRecentPosts();
         }
 
 
-        private async void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        private void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
             //if (_connectivity.NetworkAccess != NetworkAccess.Internet)
             //    await _pageDialogService.DisplayAlertAsync("Connection Error", "Internet is not available.", "Ok");
@@ -254,6 +311,6 @@ namespace SocialyUnFriend.ViewModels
             //    GetNearestVenues();
         }
 
-     
+
     }
 }

@@ -12,7 +12,10 @@ namespace SocialyUnFriend.Model
         public string Text { get; set; }
         public string ImageUri { get; set; }
         public string Platform { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime? DateTime { get; set; }
+
+        public bool IsBusy { get; set; }
+        
         
     }
 }

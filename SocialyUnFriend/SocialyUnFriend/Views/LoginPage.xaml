@@ -10,6 +10,7 @@
              mc:Ignorable="d"
              x:Class="SocialyUnFriend.Views.LoginPage"
              NavigationPage.HasNavigationBar="False"
+             xmlns:extension="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton"
              x:Name="page">
 
     <pancake:PancakeView>

@@ -6,60 +6,57 @@
              x:Class="SocialyUnFriend.Views.GetVenuesListPage"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-             Title="Venues List"
+             xmlns:extension="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton"
+             Title="All Posts"
              x:Name="page">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="ItemTemplate">
+                <ViewCell>
+                    <Grid Padding="10" 
+                          RowSpacing="8">
 
-    <pancake:PancakeView>
-        <Grid Padding="10,0,10,0">
-
-            <CollectionView ItemsSource="{Binding RecentPosts, Mode=TwoWay}"
-                    SelectionMode="None"
-                    >
-
-
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                        Span="1" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="10" RowSpacing="8">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="60" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="7*" />
-                            </Grid.ColumnDefinitions>
-                            <ffimageloading:CachedImage
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="7*" />
+                        </Grid.ColumnDefinitions>
+                        <ffimageloading:CachedImage
                        Grid.RowSpan="3"
                        Source="{Binding ImageUri}"
                        Aspect="AspectFill"
-                       DownsampleToViewSize="True"
-                       ErrorPlaceholder="loading.png" />
+                       DownsampleToViewSize="True" 
+                       extension:Skeleton.IsBusy="{Binding IsBusy}"
+	                   extension:Skeleton.BackgroundColor="#c6c6c5" />
 
-                            <Label Grid.Column="1"
+                        <Label Grid.Column="1"
                        Text="{Binding Text}"
                        TextColor="White" 
                        FontSize="16"
                        FontAttributes="None"
                        MaxLines="3"
-                       LineBreakMode="TailTruncation"            
+                       LineBreakMode="TailTruncation"
+                       HorizontalOptions="FillAndExpand"
+                       extension:Skeleton.IsBusy="{Binding IsBusy}"
+	                   extension:Skeleton.BackgroundColor="#c6c6c5"        
                         />
-                            <Label Grid.Row="1"
+                        <Label Grid.Row="1"
                        Grid.Column="1"
                        TextColor="White"    
                        Text="{Binding DateTime, StringFormat='{}{0:MM/dd/yyyy a\\t h:mm tt}'}"
                        LineBreakMode="TailTruncation"
-                       HorizontalOptions="Start"    
-                       VerticalOptions="End"
-                       FontSize="14"            
-                                   
+                       HorizontalOptions="StartAndExpand"    
+                       VerticalOptions="EndAndExpand"
+                       FontSize="14"
+                       extension:Skeleton.IsBusy="{Binding IsBusy}"
+	                   extension:Skeleton.BackgroundColor="#c6c6c5"        
                            />
 
-                            <Label Grid.Row="2"
+                        <Label Grid.Row="2"
                             Grid.Column="1"
                             HorizontalOptions="End"
                             VerticalOptions="End"
@@ -67,18 +64,35 @@
                             FontSize="14"       
                             Text="{Binding Platform}"
                             TextColor="White"
+                            extension:Skeleton.IsBusy="{Binding IsBusy}"
+	                        extension:Skeleton.BackgroundColor="#c6c6c5"   
                             />
 
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    </Grid>
 
-            <ActivityIndicator IsRunning="{Binding IsRunning}" />
+                </ViewCell>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
+    <ContentPage.Content>
+        
+    <pancake:PancakeView>
 
-        </Grid>
+            <ListView       ItemsSource="{Binding RecentPosts}"
+                            SelectionMode="None"
+                            RowHeight="140"
+                            SeparatorVisibility="None"
+                            VerticalOptions="FillAndExpand"
+                            ItemTemplate="{StaticResource ItemTemplate}"
+                            extension:Skeleton.IsParent="True"
+	                        extension:Skeleton.IsBusy="{Binding IsBusy}"
+	                        extension:Skeleton.Animation="Fade"
+                            extension:Skeleton.AnimationInterval="1000"
+                            BackgroundColor="Transparent">
+
+            </ListView>
 
     </pancake:PancakeView>
-
+    </ContentPage.Content>
 </ContentPage>
